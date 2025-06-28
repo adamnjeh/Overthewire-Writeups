@@ -193,3 +193,15 @@ $ sort data.txt | uniq -c | grep "1 "
 ![alt text](BanditScreenshots/9.png)
 
 The password is **4CKMh1JI91bUIZZPXDqGanal4xvAg0JM**
+
+# Level 9
+
+Since it's looking for readable line, the command **strings** is super handy here since it only output the human-readable characters of a file. We follow it with **grep =** to look for strings that comes after few "**=**" as mentioned in the hint.
+
+```console
+$ strings data.txt | grep =
+```
+
+![alt text](BanditScreenshots/10.png)
+
+The password is **FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey**
