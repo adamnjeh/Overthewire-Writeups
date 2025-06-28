@@ -286,5 +286,19 @@ $ nc localhost 30000
 ```
 
 ![alt text](BanditScreenshots/15.png)
+After typing the previous password and getting the new password, we can disconnect and get back to our shell with **Ctrl + C** on **Windows** or **Cmd + C** on **MacOS**
 
 The password is **8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo**
+
+# Level 16
+
+Since it requires SSL/TLS encryption, we can connect using **openssl s_client** command
+
+```console
+$ openssl s_client -connect localhost:30001
+```
+
+![alt text](BanditScreenshots/16.png)
+After typing the previous password and getting the new password, we can disconnect and get back to our shell with **Ctrl + C** on **Windows** or **Cmd + C** on **MacOS**
+
+The password is **kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx**
