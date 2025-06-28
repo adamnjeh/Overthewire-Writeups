@@ -100,8 +100,11 @@ Okay let's break that command down:
     - **file** is the command.
     - **{}** is the argument placeholder : for each file treated, **{}** gets replaced with the file name.
     - " **\\;** " marks the end of the command. We wrote **\\** because -like we stated earlier- " **;** " is a special character and shell would recognize it as a sperator and reads the rest of the line as another command.
--
+- " **| grep text** " filter the results to output only the ASCII file :
+  - " **|** " pipes the output of the left part to the input of the right path. So basically we get the results of the previous job and set it as the input of the **grep** command.
+  - **grep** shows specific parts of a text based on patterns and filterings we provide to it.
+  - **text** is the filtering we are doing since we're only looking for files that output " **ASCII text** " as a result.
 
 ![alt text](BanditScreenshots/5.png)
 
-The password is **2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ**
+The password is **4oQYVPkxZOOEOO5pTW81FB8j8lxXGUQw**
