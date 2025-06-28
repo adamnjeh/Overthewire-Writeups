@@ -276,3 +276,15 @@ $ cat /etc/bandit_pass/bandit14
 ![alt text](BanditScreenshots/14.4.png)
 
 The password is **MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS**
+
+# Level 15
+
+A simple netcat connection to our localhost will do the job.
+
+```console
+$ nc localhost 30000
+```
+
+![alt text](BanditScreenshots/15.png)
+
+The password is **8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo**
