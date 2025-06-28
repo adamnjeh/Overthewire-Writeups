@@ -82,29 +82,14 @@ The password is **2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ**
 
 # Level 5
 
-The hint says that the targeted file is the only human-readable file in **inheare/** folder that means that when we proceed **file** command on it, we get **ASCII text**.
-So the trick is to run that command recursivly on all the files and grab the one that outputs **ASCII text**.
+It is a file so **-type f**, has a size of 1033 byte so **-size 1033c** (**c** stands for byte), **not** executable so **! -executbale**.
 
 ```console
 $ cd inheare/
-$ find -type f -exec file {} \; | grep text
-$ cat ./-file07
+$ find -type f -size 1033c ! -executable
+$ cat ./maybehere07/.file2
 ```
 
-Okay let's break that command down:
+![alt text](BanditScreenshots/6.png)
 
-- " **find -type f -exec file {} \\;** " is responsible of listing the type of each file :
-  - **find** is the command to find files or directories based on filters.
-  - **-type** parameter filter the type. Since we're looking for files we put **f**.
-  - **-exec** execute a seperate command on each found file.
-    - **file** is the command.
-    - **{}** is the argument placeholder : for each file treated, **{}** gets replaced with the file name.
-    - " **\\;** " marks the end of the command. We wrote **\\** because -like we stated earlier- " **;** " is a special character and shell would recognize it as a sperator and reads the rest of the line as another command.
-- " **| grep text** " filter the results to output only the ASCII file :
-  - " **|** " pipes the output of the left part to the input of the right path. So basically we get the results of the previous job and set it as the input of the **grep** command.
-  - **grep** shows specific parts of a text based on patterns and filterings we provide to it.
-  - **text** is the filtering we are doing since we're only looking for files that output " **ASCII text** " as a result.
-
-![alt text](BanditScreenshots/5.png)
-
-The password is **4oQYVPkxZOOEOO5pTW81FB8j8lxXGUQw**
+The password is **HWasnPhtq9AVKe0dmk45nxy20cvUa6EG**
