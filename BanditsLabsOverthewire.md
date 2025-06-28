@@ -22,7 +22,7 @@ $ cat readme
 
 command, we get what that file holds inside.
 
-![alt text](<image copy.png>)
+![alt text](1.png)
 
 # Level 2
 
