@@ -24,7 +24,7 @@ $ cat readme
 
 command, we get what that file holds inside.
 
-![alt text](1.png)
+![alt text](Screenshots/1.png)
 
 The password is **ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If**
 
@@ -44,7 +44,7 @@ $ cat ./-
 
 The ' . ' means current directory. Doing so, we are providing the path for the file we want to cat.
 
-![alt text](2.png)
+![alt text](Screenshots/2.png)
 
 The password is **263JGJPfgU6LtdEvgfWU1XP5yac29mFx**
 
@@ -56,6 +56,6 @@ Spaces are special characters that can be used for other things not like the sta
 $ cat spaces\ in\ this\ filename
 ```
 
-![alt text](3.png)
+![alt text](Screenshots/3.png)
 
 The password is **MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx**
