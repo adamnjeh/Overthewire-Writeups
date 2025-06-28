@@ -24,7 +24,7 @@ $ cat readme
 
 command, we get what that file holds inside.
 
-![alt text](Screenshots/1.png)
+![alt text](BanditScreenshots/1.png)
 
 The password is **ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If**
 
@@ -44,7 +44,7 @@ $ cat ./-
 
 The ' . ' means current directory. Doing so, we are providing the path for the file we want to cat.
 
-![alt text](Screenshots/2.png)
+![alt text](BanditScreenshots/2.png)
 
 The password is **263JGJPfgU6LtdEvgfWU1XP5yac29mFx**
 
@@ -56,6 +56,26 @@ Spaces are special characters that can be used for other things not like the sta
 $ cat spaces\ in\ this\ filename
 ```
 
-![alt text](Screenshots/3.png)
+![alt text](BanditScreenshots/3.png)
 
 The password is **MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx**
+
+# Level 4
+
+We have a folder called **inhere** that contains the password file. So we need to change our directory to it with the following command
+
+```console
+$ cd inheare/
+```
+
+The hint says that the file is hidden. Hidden files are the ones that their names start with " . " and to see them we use the command
+
+```console
+$ ls -al
+```
+
+The parametre **-a** is enough to do the job but I like to list my files each on its own line so I add the parameter **-l**.
+
+![alt text](BanditScreenshots/4.png)
+
+The password is **2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ**
