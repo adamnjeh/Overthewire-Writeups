@@ -177,3 +177,19 @@ $ cat data.txt | grep millionth
 ![alt text](BanditScreenshots/8.png)
 
 The password is **dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc**
+
+# Level 9
+
+When we talk about occurence, what comes to mind is **sorting**, **minimizing** then **filtering**.
+
+```console
+$ sort data.txt | uniq -c | grep "1 "
+```
+
+- **sort** sorts the lines in the file alphabetically.
+- **uniq** minimize adjacent identical lines and replace them with one instance. We add **-c** parameter to prefix each line the count of its original occurence.
+- **grep "1 "** greps the line that starts with "**1**" which means with one occurence. Don't forget the space in the string after **1** otherwise it will outputs the lines with 10-19 occurence.
+
+![alt text](BanditScreenshots/9.png)
+
+The password is **4CKMh1JI91bUIZZPXDqGanal4xvAg0JM**
