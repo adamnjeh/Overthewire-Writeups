@@ -244,3 +244,35 @@ $ tar -xf flag
 ![alt text](BanditScreenshots/13.png)
 
 The password is **FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn**
+
+# Level 14
+
+We have an SSH private key file that will get us to connect to **level 14** machine.
+
+![alt text](BanditScreenshots/14.1.png)
+
+We need to **exit** to our machine and copy that file with **scp** command to our local directory which is " . ".
+
+```console
+$ scp -P 2220 bandit13@bandit.labs.overthewire.org:sshkey.private .
+```
+
+![alt text](BanditScreenshots/14.2.png)
+
+Then we connect as user **bandit14** using the private key.
+
+```console
+$  ssh -i sshkey.private -p 2220 bandit14@bandit.labs.overthewire.org
+```
+
+![alt text](BanditScreenshots/14.3.png)
+
+And finally we get the password from the path provided by the hint.
+
+```console
+$ cat /etc/bandit_pass/bandit14
+```
+
+![alt text](BanditScreenshots/14.4.png)
+
+The password is **MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS**
