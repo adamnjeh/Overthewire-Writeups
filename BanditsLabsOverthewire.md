@@ -1,6 +1,6 @@
 # Level 0
 
-Using ssh command to connect to the server with the user bandit0 over port 2220. the password is bandit0
+Using **ssh** command to connect to the server with the user **bandit0** over **port 2220**. the password is **bandit0**.
 
 ```console
 $ ssh -p 2220 bandit0@bandit.labs.overthewire.org
