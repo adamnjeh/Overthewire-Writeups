@@ -197,8 +197,50 @@ The content of the file is ciphered in ROT13 or known as Ceasar Cipher which is 
 $ cat data.txt
 ```
 
-We can decode it with **tr** command but it would be eaiser and practical to use **cyberchef.org** for this job.
+We can decrypt it with **tr** command but it would be eaiser and practical to use **cyberchef.org** for this job.
 
 ![alt text](BanditScreenshots/12.2.png)
 
 The password is **7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4**
+
+# Level 13
+
+First, we need to create a temporary directory so it we can do our work in it and can be deleted after we end the session.
+
+```console
+$ mkdir /tmp/njeh
+$ cp data.txt /tmp/njeh/
+$ cd /tmp/njeh/
+```
+
+The file is a hexdump. So we use **xxd** command with the parameter **-r** to reverse the process and get the original file and output the result with the name **flag**.
+
+```console
+$ xxd -r data.txt flag
+```
+
+From now on, the files we get are compressed files with various extensions. Each extension will have its own command and process. We get the extension of the compressed file with **file** command and we start our work :
+
+- for **gzip** files, we rename the file to add **.gz** extension and decompress it with **gunzip** command.
+
+```console
+$ mv flag flag.gz
+$ gunzip flag.gz
+```
+
+- for **bzip2** files, we rename the file to add **.bz2** extension and decompress it with **bunzip2** command.
+
+```console
+$ mv flag flag.bz2
+$ bunzip2 flag.bz2
+```
+
+- for **tar** files, we decompress them with **tar -xf** command
+
+```console
+$ tar -xf flag
+```
+
+![alt text](BanditScreenshots/13.png)
+
+The password is **FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn**
