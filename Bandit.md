@@ -188,3 +188,17 @@ $ cat data.txt | base64 -d
 ![alt text](BanditScreenshots/11.png)
 
 The password is **dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr**
+
+# Level 12
+
+The content of the file is ciphered in ROT13 or known as Ceasar Cipher which is based on replacing each letter with with the one that follow it by 13 index.
+
+```console
+$ cat data.txt
+```
+
+We can decode it with **tr** command but it would be eaiser and practical to use **cyberchef.org** for this job.
+
+![alt text](BanditScreenshots/12.2.png)
+
+The password is **7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4**
