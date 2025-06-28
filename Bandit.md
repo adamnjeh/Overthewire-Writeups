@@ -165,3 +165,15 @@ $ find / -user bandit7 -group bandit6 -size 33c -type f
 As we can see, the file is located in **/var/lib/dpkg/info/** under the name **bandit7.password**.
 
 The password is **morbNTDkSW6jIlUc0ymOdMaLnOlFVAaj**
+
+# Level 8
+
+We simply cat the content and grep the keyword **millionth**.
+
+```console
+$ cat data.txt | grep millionth
+```
+
+![alt text](BanditScreenshots/8.png)
+
+The password is **dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc**
