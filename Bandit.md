@@ -82,20 +82,26 @@ The password is **2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ**
 
 # Level 5
 
-We have a folder called **inhere** that contains the password file. So we need to change our directory to it with the following command
+The hint says that the targeted file is the only human-readable file in **inheare/** folder that means that when we proceed **file** command on it, we get **ASCII text**.
+So the trick is to run that command recursivly on all the files and grab the one that outputs **ASCII text**.
 
 ```console
 $ cd inheare/
+$ find -type f -exec file {} \; | grep text
+$ cat ./-file07
 ```
 
-The hint says that the file is hidden. Hidden files are the ones that their names start with " . " and to see them we use the command
+Okay let's break that command down:
 
-```console
-$ ls -al
-```
+- " **find -type f -exec file {} \\;** " is responsible of listing the type of each file :
+  - **find** is the command to find files or directories based on filters.
+  - **-type** parameter filter the type. Since we're looking for files we put **f**.
+  - **-exec** execute a seperate command on each found file.
+    - **file** is the command.
+    - **{}** is the argument placeholder : for each file treated, **{}** gets replaced with the file name.
+    - " **\\;** " marks the end of the command. We wrote **\\** because -like we stated earlier- " **;** " is a special character and shell would recognize it as a sperator and reads the rest of the line as another command.
+-
 
-The parametre **-a** is enough to do the job but I like to list my files each on its own line so I add the parameter **-l**.
-
-![alt text](BanditScreenshots/4.png)
+![alt text](BanditScreenshots/5.png)
 
 The password is **2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ**
