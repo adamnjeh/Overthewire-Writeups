@@ -151,3 +151,17 @@ $ cat ./maybehere07/.file2
 ![alt text](BanditScreenshots/6.png)
 
 The password is **HWasnPhtq9AVKe0dmk45nxy20cvUa6EG**
+
+# Level 7
+
+The hints says that the file is somewhere in the server so we search in " **/** " directory which represents the very root of the server. We filter the **-user bandit7**, the **-group bandit6** and the **-size 33c**.
+
+```console
+$ find / -user bandit7 -group bandit6 -size 33c -type f
+```
+
+![alt text](BanditScreenshots/7.png)
+
+As we can see, the file is located in **/var/lib/dpkg/info/** under the name **bandit7.password**.
+
+The password is **morbNTDkSW6jIlUc0ymOdMaLnOlFVAaj**
