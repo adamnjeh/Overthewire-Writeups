@@ -176,3 +176,15 @@ $ strings data.txt | grep =
 ![alt text](BanditScreenshots/10.png)
 
 The password is **FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey**
+
+# Level 11
+
+The content of the file is coded in base64. so we decode it with **base64** command.
+
+```console
+$ cat data.txt | base64 -d
+```
+
+![alt text](BanditScreenshots/11.png)
+
+The password is **dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr**
