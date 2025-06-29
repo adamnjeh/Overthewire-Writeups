@@ -363,3 +363,16 @@ $ diff passwords.new passwords.old
 "**<**" represents the first typed file and "**>**" represents the second.
 
 The password is **x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO**
+
+# Level 19
+
+We can't log into this level because, as the hint stated, the file **.bashrc** has been altered so that we log out the second we log in. What we can do is copying the file that holds the password, which is named **readme**, into our machine and read it with ease.
+
+```console
+$ scp -P 2220 bandit18@bandit.labs.overthewire.org:readme bandit
+$ cat bandit
+```
+
+![alt text](BanditScreenshots/19.png)
+
+The password is **cGWpMaKXVwDUNgPAVJbWYuGHVn9zl3j8**
