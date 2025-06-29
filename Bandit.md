@@ -1,4 +1,3 @@
-
 # Level 0
 
 Using **ssh** command to connect to the server with the user **bandit0** over **port 2220**.
@@ -306,13 +305,28 @@ The password is **kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx**
 
 # Level 17
 
-Since it requires SSL/TLS encryption, we can connect using **openssl s_client** command
+We use **nmap** command to scan the ports and find our target.
 
 ```console
-$ openssl s_client -connect localhost:30001
+$ nmap -T4 -sV -p 31000-32000 localhost
 ```
 
-![alt text](BanditScreenshots/16.png)
-After typing the previous password and getting the new password, we can disconnect and get back to our shell with **Ctrl + C** on **Windows** or **Cmd + C** on **MacOS**
+- **-T4** sets the speed fo scanning to level 4. **-T0** for super stealthy and thus super slow and **-T5** for insanely fast. In real-world case, it's recommanded to go stealthy otherwise we will be detected and get our IP address banned but since we are pentesting a machine designed for pentesting, we can save some time and go crazy. We didn't set it to **-T5** bacause it can miss some open ports.
+- **-sV** print out the service version of each scanned port based on nmap's data base. This way, we can know which port works with **ssl**.
+- **-p** specifies the ports to be scanned. We set the interval **31000-32000**
+
+As we can see, we have 6 open ports among them 2 run **ssl** service which are 31518 and 31790. If we look carefully, port 31518 runs **echo** service which prints out whatever we tell it and that's exactly what's stated in the hint. So let's proceed with port 31790.
+
+![alt text](BanditScreenshots/17.1.png)
+
+As we did earlier, we use **openssl c_client** command. This time, we add **-quiet** parameter because the password we will type starts with the letter "**k**" which will trigger **KEYUPDATE**.
+
+```console
+$ openssl s_client -connect localhost:31790 -quiet
+```
+
+![alt text](BanditScreenshots/17.2.png)
+
+It printed out an **RSA PRIVATE KEY**. Obviously, we're gonna use it to access it to **level 17** as we did previously on **level 14**. So let's copy this on a file locally and get the job done.
 
 The password is **kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx**
