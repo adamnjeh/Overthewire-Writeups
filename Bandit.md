@@ -329,4 +329,23 @@ $ openssl s_client -connect localhost:31790 -quiet
 
 It printed out an **RSA PRIVATE KEY**. Obviously, we're gonna use it to access it to **level 17** as we did previously on **level 14**. So let's copy this on a file locally and get the job done.
 
-The password is **kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx**
+```console
+$ echo " put the RSA key here " > bandit.private
+$ chmod 600 bandit.private
+$ ssh -i bandit.private  -p 2220 bandit17@bandit.labs.overthewire.org
+```
+
+![alt text](BanditScreenshots/17.3.png)
+
+- **echo "something" > FileName** writes the "something" in the file. If the file doesn't exits, it gets created. If it does, it deletes its content and write the "something". If you want to append the content, use **>>** instead of ">".
+- **chmod 600** changes the permission of tthe file so that only its owner can read it and write on it. **SHH** requires strict permission configurations so it can work
+
+**Side Note** : You may notice that screenshots changed a bit. That's because I switch to **Linux**. Using **Windows**' **PowerShell**, I faced issues changing the file's permission configurations because it requires other commands that I'm not familiar with. After googling them, I felt sick and went stright back to my comfort place. Thank god for Linux !
+
+```console
+$ cat /etc/bandit_pass/bandit17
+```
+
+![alt text](BanditScreenshots/17.4.png)
+
+The password is **EReVavePLFHtFlFsjn3hyzMlvSuSAcRD**
