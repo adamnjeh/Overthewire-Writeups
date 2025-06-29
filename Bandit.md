@@ -376,3 +376,26 @@ $ cat bandit
 ![alt text](BanditScreenshots/19.png)
 
 The password is **cGWpMaKXVwDUNgPAVJbWYuGHVn9zl3j8**
+
+# Level 20
+
+As expected, we don't have permission to read the file.
+
+```console
+$ cat /etc/bandit_pass/bandit20
+```
+
+![alt text](BanditScreenshots/20.1.png)
+
+Let's follow the hint and run the binary without arguments. To run a binary, we write **./** before it.
+The description says it runs commands as another user. From the name of the binary, we can guess the user it mentions is **bandit20**. From the example th description gave, we put command to run as an argument to the binary.
+
+```console
+$ ls
+$ ./bandit20-do
+$ ./bandit20-do cat /etc/bandit_pass/bandit20
+```
+
+![alt text](BanditScreenshots/20.2.png)
+
+The password is **0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO**
