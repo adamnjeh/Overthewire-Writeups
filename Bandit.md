@@ -349,3 +349,17 @@ $ cat /etc/bandit_pass/bandit17
 ![alt text](BanditScreenshots/17.4.png)
 
 The password is **EReVavePLFHtFlFsjn3hyzMlvSuSAcRD**
+
+# Level 18
+
+The password is the difference between two files. Naturally, we use the command **diff**
+
+```console
+$ diff passwords.new passwords.old
+```
+
+![alt text](BanditScreenshots/18.png)
+
+"**<**" represents the first typed file and "**>**" represents the second.
+
+The password is **x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO**
