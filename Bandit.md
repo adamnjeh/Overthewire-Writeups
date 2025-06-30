@@ -399,3 +399,18 @@ $ ./bandit20-do cat /etc/bandit_pass/bandit20
 ![alt text](BanditScreenshots/20.2.png)
 
 The password is **0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO**
+
+# Level 21
+
+Running the binary, it tells us that is connects to localhost via a port specified as argument. When it reads the current password from the connection, it will gives us the new password. So what we need to do is setting up an **nc** connection with an arbitrary port and echo the password in its input to be written after connecting
+
+```console
+$ echo "0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO" | nc -l localhost 31000 &
+```
+
+![alt text](BanditScreenshots/21.png)
+
+- "**-l**" tells it to listen for incmoing connections and not start one because the communication will be started by the binary
+- "**&**" sends the communication to the background and gives us the shell back. Without it, the communication interface will persist and wait for our input.
+
+The password is **EeoULMCra2q0dSkYj561DX7s1CpBuOBt**
