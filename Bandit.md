@@ -451,10 +451,10 @@ Next, it's setting the output of some pipelined comand to the variable target. T
 - **| md5sum** : That output is the input of **md5sum** command which will gives us its MD5 hash value.
 - **cut -d ' ' -f 1** : The output of **md5sum** command is in this format : md5 hash + a blank space + file name or simply -. Since we need to get the first part of the output, we use **cut** command to devide it based on the blank space as a delimiter that's why they typed " **-d ' '** " then we retrieve the first part that's why they typed " **-f 1** ".
 
-To confirm it, let's try to see the output of that phrase on our own. To do so, we echo it into a file and run the **md5sum** command on it
+Finally, it copies the password into a file named after the **$mytarget** value under **/tmp** directory.
+
+So to solve this, we need to replace the variable **$myname** with the username of the next level which should be **bandit23**. So the file name should be the MD5 hash of the phrase **"I am user bandit23"**.
 
 ![alt text](BanditScreenshots/23.2.png)
 
-And voilà ! It gives the same file name. Also, if you look closely, it is the same file name that holds the password of the this level !
-
-The password is **tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q**
+The password is **0Zf11ioIjMVN551jX3CmStKLYqjk54Ga**
