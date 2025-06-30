@@ -458,3 +458,20 @@ So to solve this, we need to replace the variable **$myname** with the username 
 ![alt text](BanditScreenshots/23.2.png)
 
 The password is **0Zf11ioIjMVN551jX3CmStKLYqjk54Ga**
+
+# Level 24
+
+Following the same process, we find the following script
+
+```console
+$ ls /etc/cron.d
+$ cat /etc/cron.d/cronjob_bandit24
+$ cat /usr/bin/cronjob_bandit24.sh
+```
+
+![alt text](BanditScreenshots/24.1.png)
+
+Basically, what this bash script doing is executing every file in **/var/spool/bandit24/foo** (took the liberty to change $myname variable with the expected value) except " . " which represents the current directory and " .. " which represents the parent directory and ensuring that the file to be executed have **bandit23** as its owner which is in our favor since we are currently loged in as **bandit23**. Finally, it removes all the files.
+Based on the cron file, this script is executed every minute (\* \* \* \* \* means every minute of every hour of every day of every month of every year) so to exploit this, we need to create a bash file in that directory that can export the content of **/etc/bandit_pass/bandit24** into another file that we can access.
+
+The password is **tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q**
