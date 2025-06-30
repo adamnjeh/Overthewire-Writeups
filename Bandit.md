@@ -286,6 +286,7 @@ $ nc localhost 30000
 ```
 
 ![alt text](BanditScreenshots/15.png)
+
 After typing the previous password and getting the new password, we can disconnect and get back to our shell with **Ctrl + C** on **Windows** or **Cmd + C** on **MacOS**
 
 The password is **8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo**
