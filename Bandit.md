@@ -449,7 +449,7 @@ Next, it's setting the output of some pipelined comand to the variable target. T
 
 - **echo I am user $myname** : What we know is that the command **echo** prints out the same message. But in this case it is a bit different. We specified a variable this time so its echoed version will be its value. So, the ouutput will be **I am user bandit22**.
 - **| md5sum** : That output is the input of **md5sum** command which will gives us its MD5 hash value.
-- **cut -d ' ' -f 1** : The output of **md5sum** command is in this format : md5 hash + a blank space + file name or simply -. Since we need to get the first part of the output, we use **cut** command to devide it based on the blank space as a delimiter that's why they typed " **-d ' '** " then we retrieve the first part that's why they typed " **-f 1** ".
+- **cut -d ' ' -f 1** : The output of **md5sum** command is in this format : md5 hash + a blank space + the character " - " _(We are reading it from an echo output. Normally, **md5sum** works with files and their contents so that - would be replaced with the file name)_. Since we need to get the first part of the output, we use **cut** command to devide it based on the blank space as a delimiter that's why they typed " **-d ' '** " then we retrieve the first part that's why they typed " **-f 1** ".
 
 Finally, it copies the password into a file named after the **$mytarget** value under **/tmp** directory.
 
