@@ -414,3 +414,18 @@ $ echo "0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO" | nc -l localhost 31000 &
 - "**&**" sends the communication to the background and gives us the shell back. Without it, the communication interface will persist and wait for our input.
 
 The password is **EeoULMCra2q0dSkYj561DX7s1CpBuOBt**
+
+# Level 22
+
+Checking the content of **/etc/cron.d/**, we find a cronjob file named after **bandit 22**. It gave reference to a **.sh** file. Reading its content, we find out that it moves the content of **/etc/bandit_pass/bandit22**, which holds the next password, to some other file. So naturally, we get our password from that file.
+
+```console
+$ ls /etc/cron.d
+$ cat /etc/cron.d/cronjob_bandit22
+$ cat /usr/bin/cronjob_bandit22.sh
+$ cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+```
+
+![alt text](BanditScreenshots/22.png)
+
+The password is **tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q**
