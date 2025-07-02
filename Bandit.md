@@ -471,7 +471,55 @@ $ cat /usr/bin/cronjob_bandit24.sh
 
 ![alt text](BanditScreenshots/24.1.png)
 
-Basically, what this bash script doing is executing every file in **/var/spool/bandit24/foo** (took the liberty to change $myname variable with the expected value) except " . " which represents the current directory and " .. " which represents the parent directory and ensuring that the file to be executed have **bandit23** as its owner which is in our favor since we are currently loged in as **bandit23**. Finally, it removes all the files.
-Based on the cron file, this script is executed every minute (\* \* \* \* \* means every minute of every hour of every day of every month of every year) so to exploit this, we need to create a bash file in that directory that can export the content of **/etc/bandit_pass/bandit24** into another file that we can access. The file will be executed the next minute.
+Basically, what this bash script doing is executing every file in **/var/spool/bandit24/foo** (took the liberty to change $myname variable with the expected value) except for " . " which represents the current directory and " .. " which represents the parent directory and ensuring that the file being executed has **bandit23** as its owner which is in our favor since we are currently loged in as **bandit23**. Finally, it removes all the files.
+Based on the cron file, this script is executed every minute (\* \* \* \* \* means every minute of every hour of every day of every month) so to exploit this, we need to create a bash file in that directory that can export the content of **/etc/bandit_pass/bandit24** into another file that we can access. The file will be executed the next minute.
 
-The password is **tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q**
+First, let's create a temporary directory to work on and let's create our bash script with **nano**.
+
+```console
+$ mkdir /tmp/flag24
+$ cd /tmp/flag24
+$ nano script.sh
+```
+
+![alt text](BanditScreenshots/24.2.png)
+
+We want the password for level 24 which we know it exists in the file **/etc/bandit_pass/bandit24**. So let's cat it out into a file in our temp directory. Don't forget to **shebang** the script.
+
+```console
+$ #!/bin/bash
+$ cat /etc/bandit_pass/bandit24 > /tmp/flag24/password24
+```
+
+Exit with saving b typing Ctrl+X (or Cmd+X), y, then hitting Enter.
+
+![alt text](BanditScreenshots/24.3.png)
+
+Now we need to edit some permissions. We need the script to be executed by everyone not just us (as bandit23). Also, we need this current directory to be overwritten by everyone so that the file **password** can be created. Let's check it with **ls -al**.
+
+```console
+$ chmod 777 script.sh
+$ chmod 777 .
+$ ls -al
+```
+
+Exit with saving b typing Ctrl+X (or Cmd+X), y, then hitting Enter.
+
+![alt text](BanditScreenshots/24.4.png)
+
+Now let's copy this script to that directory and wait for it to be executed.
+
+```console
+$ cp script.sh /var/spool/bandit24/foo
+```
+
+After a minute, we can see the **pasword24** file is added into our directory and it holds the password.
+
+```console
+$ ls
+$ cat password24
+```
+
+![alt text](BanditScreenshots/24.5.png)
+
+The password is **gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8**
