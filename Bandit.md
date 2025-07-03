@@ -596,7 +596,7 @@ $ cat /usr/bin/showtext
 ![alt text](BanditScreenshots/26.1.png)
 As we can see, it uses **/usr/bin/showtext** and that scripts just throws a text before exiting but interestingly it uses **more** command. Let's focus on that. After some research, I found out that I can open **vi editor** from the **more prompt**. But I need to trigger that promt by minimizing the window and enabeling the **more** functionality.
 
-After connecting, press **V** to get to open **vi editor** and **edit** the **/etc/bandit_pass/bandit26** file to read its content by proceeding it with "**:e**".
+After connecting, press **V** to get to open **vi editor** and **open** the **/etc/bandit_pass/bandit26** file to read its content by proceeding it with "**:e**".
 
 ```console
 :e /etc/bandit_pass/bandit26
