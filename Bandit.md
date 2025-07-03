@@ -583,3 +583,25 @@ $ python3 ./script.py
 ![alt text](BanditScreenshots/25.png)
 
 The password is **iCi86ttT4KSNe1armKiwbQNmB3YJP3q4**
+
+# Level 26
+
+Afer logging in with **bandit25**, we find **RSA private key** to log in with **bandit26**. Doing so, we get logged out immediatly. The hints is mentioning something about **bandit26** not using **/bin/bash** as a shell so let's check it by typing
+
+```console
+$ cat /etc/passwd | grep bandit26
+$ cat /usr/bin/showtext
+```
+
+![alt text](BanditScreenshots/26.1.png)
+As we can see, it uses **/usr/bin/showtext** and that scripts just throws a text before exiting but interestingly it uses **more** command. Let's focus on that. After some research, I found out that I can open **vi editor** from the **more prompt**. But I need to trigger that promt by minimizing the window and enabeling the **more** functionality.
+
+After connecting, press **V** to get to open **vi editor** and **edit** the **/etc/bandit_pass/bandit26** file to read its content by proceeding it with "**:e**".
+
+```console
+:e /etc/bandit_pass/bandit26
+```
+
+![alt text](BanditScreenshots/26.2.png)
+
+The password is **s0773xxkk0MXfdqOfPRVr9L3jJBUOgCZ**
