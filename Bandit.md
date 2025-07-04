@@ -605,3 +605,67 @@ After connecting, press **V** to get to open **vi editor** and **open** the **/e
 ![alt text](BanditScreenshots/26.2.png)
 
 The password is **s0773xxkk0MXfdqOfPRVr9L3jJBUOgCZ**
+
+# Level 27
+
+Here, we need to more than simply reading a file. Here, we are going to gain **shell** !
+To do so, we need first to correct the shell that we found **bandit26** using previously. So after opening the session, in minimized window, and pressing **V** to open **Vim editor**, let's set the variable shell to the correct path by typing
+
+```console
+:set shell=/bin/bash
+```
+
+Then, we can open the shell by the following command
+
+```console
+:shell
+```
+
+And voilà !
+
+![alt text](BanditScreenshots/27.png)
+
+We find ourselves in the same case as **level 20** so you know what to do !
+
+The password is **upsNCc7vzaRDx6oZC6GiR6ERwe1MowGB**
+
+# Level 28
+
+After logging in with **bandit27**, we clone the repo into a temporary folder (don't forget to specify the port if you didn't change it in the .ssh configuration). In there, there is a file containing the password
+
+```console
+$ git clone ssh://bandit27-git@localhost:2220/home/bandit27-git/repo
+$ ls repo/
+$ cat repo/REDAME
+```
+
+And voilà !
+
+![alt text](BanditScreenshots/28.png)
+
+We find ourselves in the same case as **level 20** so you know what to do !
+
+The password is **Yz9IpL0sBcCeuG7m9uQFt8ZNpS4HZRcN**
+
+# Level 29
+
+Following the same process, we find a file that has the credentials but the password is hashed. So maybe it was not and at some point it got modified ? To check if that's the case, we can see the history of that file with **git log** command. We can clearly see three versions of that file. Using that **commit hash**, let see the previous version.
+
+```console
+$ cat README.md
+$ git log -- README.md
+```
+
+![alt text](BanditScreenshots/29.1.png)
+
+Using that **commit hash**, let see the previous version.
+
+```console
+$ git show fb0df1358b1ff146f581651a84bae622353a71c0:README.md
+```
+
+![alt text](BanditScreenshots/29.2.png)
+
+And there is the password !
+
+The password is **4pT1t5DENaYuqnqvadYs1oE4QLCdjmJ7**
