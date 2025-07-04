@@ -669,3 +669,18 @@ $ git show fb0df1358b1ff146f581651a84bae622353a71c0:README.md
 And there is the password !
 
 The password is **4pT1t5DENaYuqnqvadYs1oE4QLCdjmJ7**
+
+# Level 30
+
+Following the same process, we find a file that has the credentials but it says that is not in production so we will not find anything in **master** branch. Let's see if there is branches related to development, switch to them and check for any changes.
+
+```console
+$ git branch -a
+$ git checkout dev
+```
+
+![alt text](BanditScreenshots/30.png)
+
+As we can see, there is a branch named **dev** that hold some additional folder named **code** and a version of the **README.md** file that contains the password.
+
+The password is **qp30ex3VLz5MDG1n91YowTv4Q8l7CDZL**
