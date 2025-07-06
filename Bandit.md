@@ -10,13 +10,13 @@ The password is **bandit0**.
 
 # Level 1
 
-The command
+Use the following command to list files in the current directory:
 
 ```console
 $ ls
 ```
 
-gives us the files in the current directory. It prints out that there is a file named **readme**. Using
+This reveals a file named **readme**. To view its contents, run:
 
 ```console
 $ cat readme
@@ -30,13 +30,13 @@ The password is **ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If**
 
 # Level 2
 
-We have a file named ' - ' . If we do
+The directory contains a file named **' - '**. Running:
 
 ```console
 $ cat -
 ```
 
-it won't work because it's expecting standard input as the dashes are reserved for the parameters. What we can do is
+fails because the dash **-** is interpreted as standard input. Instead, specify the file path using the current directory **./** :
 
 ```console
 $ cat ./-
