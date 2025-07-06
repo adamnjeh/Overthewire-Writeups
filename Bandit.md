@@ -750,9 +750,15 @@ The password is **3O9RfhqyAlVBEZpVb6LYStshZoqoSx5K**
 
 # Level 33
 
-After logging in, we find ourselves in a new form of shell proceeded by a message mentioning that everything is in uppercase. After trying some basic commands, we see that it reads them in uppercase followed by **permission denied** message. So let's try some **environment variables** which are already uppercased. As we see, **$HOME** is interpreted correctly and was readen as the home path. We can get shell by either typing **$SHELL** (which weirdly didn't work) or **$0**.
+After logging in, we find ourselves in a new form of shell proceeded by a message mentioning that everything is in uppercase. After trying some basic commands, we see that it reads them in uppercase followed by **permission denied** message. So let's try some **environment variables** which are already uppercased. As we see, **$HOME** is interpreted correctly and was readen as the home path. We can get shell by either typing **$SHELL** or **$0**.
+
+**$SHELL** represents the path to the default executable shell which is **/bin/bash** or **/bin/sh** and it didn't work reflecting that it doesn't use the default one.
+
+Meanwhile, **$0** represents the script that is currently used as an executable shell no matter what the default is.
 
 ```console
+>> $HOME
+>> $SHELL
 >> $0
 ```
 
