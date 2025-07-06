@@ -687,15 +687,15 @@ The password is **qp30ex3VLz5MDG1n91YowTv4Q8l7CDZL**
 
 # Level 31
 
-Following the same process, we find a file that has the credentials but it says that is not in production so we will not find anything in **master** branch. Let's see if there is branches related to development, switch to them and check for any changes.
+Following the previous techniques, nothing is uncovered. Checking the **packed references** file inside **.git/..** folder, we get a tag names **secret**. Humm, showing its content, we get our password.
 
 ```console
-$ git branch -a
-$ git checkout dev
+$ cd .git/
+$ ls
+$ cat packed-refs
+$ git show secret
 ```
 
-![alt text](BanditScreenshots/30.png)
-
-As we can see, there is a branch named **dev** that hold some additional folder named **code** and a version of the **README.md** file that contains the password.
+![alt text](BanditScreenshots/31.png)
 
 The password is **fb5S2xb7bRyFmAvQYQGEqsbhVyJqhnDy**
