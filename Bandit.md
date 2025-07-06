@@ -750,17 +750,13 @@ The password is **3O9RfhqyAlVBEZpVb6LYStshZoqoSx5K**
 
 # Level 33
 
-After logging in, we find ourselves in a new form of shell proceeded by a message mentioning that everything is in uppercase. After trying some basic commands, we see that it reads them in uppercase followed by **permission denied** message. So let's try some **local variables** which are already uppercased. As we see, **$HOME** is interpreted correctly and was readen as the home path. We can get shell by either typing **$SHELL** (which didn't work) or **$0**
+After logging in, we find ourselves in a new form of shell proceeded by a message mentioning that everything is in uppercase. After trying some basic commands, we see that it reads them in uppercase followed by **permission denied** message. So let's try some **local variables** which are already uppercased. As we see, **$HOME** is interpreted correctly and was readen as the home path. We can get shell by either typing **$SHELL** (which didn't work) or **$0**.
 
 ```console
-$ git branch
+>> $0
 ```
 
-And finally, let's push it.
-
-```console
-$ git push origin master
-```
+After getting the shell, we see the current user
 
 ![alt text](BanditScreenshots/33.png)
 
