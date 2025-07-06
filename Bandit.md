@@ -699,3 +699,51 @@ $ git show secret
 ![alt text](BanditScreenshots/31.png)
 
 The password is **fb5S2xb7bRyFmAvQYQGEqsbhVyJqhnDy**
+
+# Level 32
+
+Here, we need to push some file with specific name and content to the repo as the **README.md** file suggests.
+
+```console
+$ cat README.md
+```
+
+![alt text](BanditScreenshots/32.1.png)
+
+But after creating the file and adding it to be staged, it gets ignored. And if we check the **.gitignore** file, it tells as that it ignore every file that ends with **.txt** .
+
+```console
+$ echo May I come in? > key.txt
+$ git add key.txt
+$ cat .gitignore
+```
+
+![alt text](BanditScreenshots/32.2.png)
+
+So let's force it with **-f** parameter.
+
+```console
+$ git add -f key.txt
+```
+
+Then commit it with a meaningful message for good practice.
+
+```console
+$ git commit -m "Add key.txt to branch master
+```
+
+Before pushing, let's check if we're in master branch with the following command :
+
+```console
+$ git branch
+```
+
+And finally, let's push it.
+
+```console
+$ git push origin master
+```
+
+![alt text](BanditScreenshots/32.3.png)
+
+The password is **3O9RfhqyAlVBEZpVb6LYStshZoqoSx5K**
