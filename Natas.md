@@ -93,3 +93,37 @@ It gave us a blank page. But viewing its source page gave us the secret phrase.
 Typing that secret phrase in the input field will grant us access and reveal the next password.
 
 ![alt text](NatasScreenshots/7.3.png)
+
+# Level 8
+
+The hint provided in source page is that the password is listed in **/etc/natas_webpass/natas8**. And when follow links for **Home** or **About**, we can clearly see in the url above that it ends with **index.php?page=** followd by our destination. So let's try to replace the destination by **/etc/natas_webpass/natas8**.
+
+![alt text](NatasScreenshots/8.png)
+
+# Level 9
+
+Following the same process in **level 7**. We find some php code. It gae us the secret in its encrypted form along with the function of the encyrption which is **bin2hex(strrev(base64_encode($secret)))**. So basically, it takes the secret as input and converts it to base64 then reverses the result and finally it converts the final result to hex.
+
+![alt text](NatasScreenshots/9.1.png)
+
+To decrypt it, we can revert the process using **CyberChef** by converting from Hex then reversing and finally converting from Base64.
+
+![alt text](NatasScreenshots/9.2.png)
+
+And voilà! We get the secret that will grant us access to the password.
+
+![alt text](NatasScreenshots/9.3.png)
+
+# Level 10
+
+Here, it takes our input and put it directly in a shell command without sanitization to search for it with **grep** command in a file called **directory.txt**.
+
+![alt text](NatasScreenshots/10.1.png)
+
+We can exploit it by making our input a valid command and seperate it from the rest of the command that it is intented to be added to it with th use of semicolon **" ; "**. For exapmle, typing **" ; whoami ; "** will print us the current user.
+
+![alt text](NatasScreenshots/10.2.png)
+
+So let's get the password by typing **" ; cat /etc/natas_webpass/natas10 ; "**.
+
+![alt text](NatasScreenshots/10.3.png)
