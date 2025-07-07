@@ -77,3 +77,19 @@ Checking the **Cookies**, we can spot an interesting one named **loggedin** with
 In many programming languages, 0 reffers to False and any other number reffers to True. So let's try changing that cookie's value to 1 and then refreshing the page.
 
 ![alt text](NatasScreenshots/6.2.png)
+
+# Level 7
+
+Here we need a secret phrase. Viewing the page source didn't give us anything useful but following the link provided gave as an extra part in the source code which is a php code. This code can be read only by the server that's why we couldn't see it when checking source page on our own.
+
+That piece of code started with including a specific file from a specific folder. so let's follow it by typing it on the **URL** above.
+
+![alt text](NatasScreenshots/7.1.png)
+
+It gave us a blank page. But viewing its source page gave us the secret phrase.
+
+![alt text](NatasScreenshots/7.2.png)
+
+Typing that secret phrase in the input field will grant us access and reveal the next password.
+
+![alt text](NatasScreenshots/7.3.png)
