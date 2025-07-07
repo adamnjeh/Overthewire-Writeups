@@ -127,3 +127,19 @@ We can exploit it by making our input a valid command and seperate it from the r
 So let's get the password by typing **" ; cat /etc/natas_webpass/natas10 ; "**.
 
 ![alt text](NatasScreenshots/10.3.png)
+
+# Level 11
+
+Here, it did some sanitazion to the input. It no longer accepts input that contains **;** or **&** or **|**.
+
+![alt text](NatasScreenshots/11.1.png)
+
+We can cleverly exploit the **grep** command to search not only in the **dictionary** file but also in **/etc/natas_webpass/natas11** file.
+
+Fortunatly, **grep** can accepts multiple files to look into after specifying the strings to look for. So what we can do is make our input in this form : **{s} /etc/natas_webpass/natas11** where **{s}** will be replaced with strings to look for. And with that, it will search for the existance of **{s}** in **dictionary.txt** and **/etc/natas_webpass/natas11**.
+
+Following the pattern of passwords, we know for sure that it contains numbers so let's replace **{s}** with numbers from 0 to 9 until we get a result.
+
+We got a result with 1. so the input **" 1 /etc/natas_webpass/natas11 "** will give us the password.
+
+![alt text](NatasScreenshots/11.2.png)
