@@ -53,3 +53,27 @@ Folloing it, we find the **users.txt** file like the previous level.
 **users.txt** revealed the credentials for the user **natas4**.
 
 ![alt text](NatasScreenshots/4.4.png)
+
+# Level 5
+
+We are not allowed to access the page and it tells that it is expecting access from another webpage. This brings us to the concept of **Referer** (yes, an R is missing) which tells from where we came. Let's assume we are on website A and there is a link to website B. When we click it it gets us to website B with the **Referer** holding the website A as we came from there.
+
+To solve this, let's intercept the request right before clicking the **refresh** link and change our **Referer**.
+
+![alt text](NatasScreenshots/5.1.png)
+
+As you can see, the **Referer** field is set to **"http://natas4.natas.labs.overthewire.org/"**. So let's change it to **"http://natas5.natas.labs.overthewire.org/"** and hit **Forward** button.
+
+![alt text](NatasScreenshots/5.2.png)
+
+# Level 6
+
+We are disallowed. Source page didn't reveal anything useful. So let's look around for anything suspecious.
+
+Checking the **Cookies**, we can spot an interesting one named **loggedin** with a value of **0**.
+
+![alt text](NatasScreenshots/6.1.png)
+
+In many programming languages, 0 reffers to False and any other number reffers to True. So let's try changing that cookie's value to 1 and then refreshing the page.
+
+![alt text](NatasScreenshots/6.2.png)
