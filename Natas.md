@@ -207,7 +207,7 @@ So let's craft it in a **.php** file (that I named rev.php) and upload it.
 
 ![alt text](NatasScreenshots/13.1.png)
 
-The problem is when after uploading it it changes its extension from **.php** to **.jpg** which will prevents its job.
+The problem is after uploading it, it changes its extension from **.php** to **.jpg** which will prevents its job.
 
 ![alt text](NatasScreenshots/13.2.png)
 
