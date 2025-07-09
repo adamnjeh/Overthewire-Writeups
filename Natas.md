@@ -280,7 +280,7 @@ If we leave the username empty and type {**" or "1" = "1**} in the password, the
 SELECT * from users where username="" and password="" or "1" = "1"
 ```
 
-That **{or "1" = "1"}** part makes the statement true whatever the username and password are. And thus, it will outputs everything sisnce the querry is selecting \*.
+That **{or "1" = "1"}** part makes the statement true whatever the username and password are. And thus, it will select everything in the table and bypass that if statement (that checks if we selected at leat one row) correctly.
 
 ![alt text](NatasScreenshots/15.2.png)
 
