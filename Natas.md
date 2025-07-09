@@ -136,10 +136,152 @@ Here, it did some sanitazion to the input. It no longer accepts input that conta
 
 We can cleverly exploit the **grep** command to search not only in the **dictionary** file but also in **/etc/natas_webpass/natas11** file.
 
-Fortunatly, **grep** can accepts multiple files to look into after specifying the strings to look for. So what we can do is make our input in this form : **{s} /etc/natas_webpass/natas11** where **{s}** will be replaced with strings to look for. And with that, it will search for the existance of **{s}** in **dictionary.txt** and **/etc/natas_webpass/natas11**.
+Fortunatly, **grep** can accepts multiple files to look into after specifying the strings to look for. So what we can do is make our input in this form : **" {s} /etc/natas_webpass/natas11 "** where **{s}** will be replaced with strings to look for. And with that, it will search for the existance of **{s}** in **dictionary.txt** and **/etc/natas_webpass/natas11**.
 
 Following the pattern of passwords, we know for sure that it contains numbers so let's replace **{s}** with numbers from 0 to 9 until we get a result.
 
 We got a result with 1. so the input **" 1 /etc/natas_webpass/natas11 "** will give us the password.
 
 ![alt text](NatasScreenshots/11.2.png)
+
+# Level 12
+
+After understanding the php code in the source code, we can see that it does the following process :
+
+- It creates an array that contains **showpassword** with the value of **no** and **bgcolor** with the value of **#ffffff** and store it in variable named **defaultdata**
+- It has a function of encryption that encrypts by xoring with a key text character by character. The key text is not stated plainly.
+- It has a function that loads data from cookie : It grabs the cookie that holds **data** key, decode it from base64, decrypt it, turns it from string to a decoded json then extract from its keys (which are **showpassword** and **bgcolor**) the corresponding values and outputs them in an array. The decryption is made by encrypting again because xoring twice will get you to the same result.
+- It has a function to save data data by feeding an array and doing the whole process of json decoding, encrypting, base64 encoding and setting it to the cookie **data**.
+- Finally, it checks if the key **showpassword** of the current encrypted **data** cookie has a value of **yes**, it will show as the password.
+
+So basically we need to change the value of the cookie to what it desires but we need it to be encrypted the way it wants with its unknown key. What we have are two things : the **defaultdata** array which is **array( "showpassword"=>"no", "bgcolor"=>"#ffffff")** and the encrypted base64 encoded version of its json encoded string which is **" HmYkBwozJw4WNyAAFyB1VUcqOE1JZjUIBis7ABdmbU1GIjEJAyIxTRg "** which can be taken from the value of the cookie **data** and removing the **" %3D "** because it just means **" = "** but url encoded. Anyway, these two are enough for us to find the key because if the first xored with key gave us the second, xoring the first with the second will give us the key !
+
+So let's write a similar php code to do the same encypting but changing the key with json encoded version of the **defaultdata** array and encrypt the value of **data** cookie.
+
+```php
+<?php
+
+function xor_encrypt($in) {
+    $key = json_encode(array("showpassword"=>"no", "bgcolor"=>"#ffffff"));
+    $text = $in;
+    $outText = '';
+
+    // Iterate through each character
+    for($i=0;$i<strlen($text);$i++) {
+    $outText .= $text[$i] ^ $key[$i % strlen($key)];
+    }
+
+    return $outText;
+}
+
+echo xor_encrypt(base64_decode("HmYkBwozJw4WNyAAFyB1VUcqOE1JZjUIBis7ABdmbU1GIjEJAyIxTRg"))
+?>
+```
+
+![alt text](NatasScreenshots/12.1.png)
+
+As you can see, it outputs 4 characters that are repeated multiple times which is expected because initialy it used modulo operation to go through the key letters multiple times. Anyway, the key is these 4 characters.
+
+Now, we change our encryption function with the actual key and encrypt the json encoded version of the desired array (which holds the value **yes** to the key **showpassword**) and of course code it in base64.
+
+![alt text](NatasScreenshots/12.2.png)
+
+Injecting that resulted string in **data** cookie and refreshing the page will give us the password.
+
+![alt text](NatasScreenshots/12.3.png)
+
+# Level 13
+
+Going through the source code, what it does is that it take our uploaded file and change its name with a randomly generated one and then it saves it in **upload/** folder and even provides us its link.
+
+Obviously, we are going to craft a web shell as an input which will allow us to inject commands and get output from teh web's server.
+
+I googled for a simple one line php payload and settled with the following :
+
+```php
+<?php if(isset($_GET['cmd'])){system($_GET['cmd']);} ?>
+```
+
+And it will allow us to inject the command in the url above after "**.php?=cmd**".
+So let's craft it in a **.php** file (that I named rev.php) and upload it.
+
+![alt text](NatasScreenshots/13.1.png)
+
+The problem is when after uploading it it changes its extension from **.php** to **.jpg** which will prevents its job.
+
+![alt text](NatasScreenshots/13.2.png)
+
+And that's because it set the name randomly (as we said earlier) from the very beginning and replace our file's name, including its extension, with the generated name. This is where it is done :
+
+![alt text](NatasScreenshots/13.3.png)
+
+So to prevent it from changing our extension, after the page is loaded and before uploading our file, we need to change the **HTML** code and specifically change the extenstion of the generated name in that line from **.jpg** to **.php**.
+
+![alt text](NatasScreenshots/13.4.png)
+
+Let's upload now and follow the link to open our reverse web shell.
+
+Let's verify if the payload is working correctly by adding to the url : **" ?cmd=whoami "**.
+
+![alt text](NatasScreenshots/13.5.png)
+
+Cool ! Now let's inject the command **" cat /etc/natas_webpass/natas13 "** to get the next password. But first, we need to URL-encode it. In our case, all we need to is replace that space with **" %20 "**. If you want to make sure, you can hope quickly to CyberChef and URL-encode that command.
+
+Anyway, here is the result :
+
+![alt text](NatasScreenshots/13.6.png)
+
+# Level 14
+
+Now, it checks if we uploaded a legit image so we can't simply throw a php payload. So let's get ourselves a real image and inject in it the payload !
+
+The image needs to be really tiny with a size under 1Kb to be accepted so let's download a small white pixel. Here is a nice website to do so : https://commons.wikimedia.org/wiki/File:1x1.png
+
+Now how can we inject our payload in that image ? Well, each image has a field named **Comment** that can hold strings without affecting the image itself. So let's comment our payload in that image with **exiftool** command. Then, we need to rename our image to hold **.php** extension rather than **.png** so it can work properly
+
+```console
+$ exiftool -Comment='<?php if(isset($_GET['cmd'])){system($_GET['cmd']);} ?>' 1x1.png
+$ mv 1x1.png 1x1.php
+```
+
+![alt text](NatasScreenshots/14.1.png)
+
+Let's run **exiftool** on our new file to check if it is still interpreted as a legit image.
+
+```console
+$ exiftool 1x1.php
+```
+
+![alt text](NatasScreenshots/14.2.png)
+
+As you can see, it stated that the file type is PNG and the the file type extension is png. It even printed out its comment which is our payload. So let's give it a try!
+
+But don't forget to change the extension from .jpg to .php in HTML code as we did earlier.
+
+![alt text](NatasScreenshots/14.3.png)
+
+It got uploaded successfully. Let's follow its link and type **" ?cmd=whoami "** to test it.
+
+![alt text](NatasScreenshots/14.4.png)
+
+It outputs the result at the start of the last line. Cool !
+
+Let's give it the real deal : **" ?cmd=cat%20/etc/natas_webpass/natas14 "**
+
+![alt text](NatasScreenshots/14.5.png)
+
+# Level 15
+
+Here, we can do some basic SQL injection. Based on the source code, the input is not sanitized so we can manipulate the SQL querry with whatever input we give it.
+
+If we leave the username empty and type {**" or "1" = "1**} in the password, the querry will be interpreted like this
+
+```sql
+SELECT * from users where username="" and password="" or "1" = "1"
+```
+
+That **{or "1" = "1"}** part makes the statement true whatever the username and password are. And thus, it will outputs everything sisnce the querry is selecting \*.
+
+![alt text](NatasScreenshots/15.2.png)
+
+![alt text](NatasScreenshots/15.1.png)
