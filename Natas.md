@@ -410,6 +410,8 @@ for count in range(1, password_length + 1):
 		print(f'Stopped: no match at position {count}')
 		break
 print(f'Final password : {password}')
-
-
 ```
+
+After executing the code and waiting for a while, we get our password.
+
+![alt text](NatasScreenshots/17.png)
