@@ -488,8 +488,15 @@ Based in the source code, it randomizes our ID between 1 and 640 so the admin ID
 
 - Go to the Intruder tab. Select the value to be changed. Click **"add §"**. Set payload type to **numbers**. Set the range from 1 to 640. 
 
-![alt text](NatasScreenshots/19.2.png)
+![alt text](NatasScreenshots/19.3.png)
 
 - Go to settings on the right vertical pannel. Scroll down to **Auto-pause attack**. Add the item **"You are an admin."** so it will stop when it finds in without checking for other numbers.
 
 - Hit **Start Attack** and wait for the magic.
+
+![alt text](NatasScreenshots/19.4.png)
+
+- As you can see, it stopped at 119. Let's change the cookie to that value, refresh and see the result.
+
+![alt text](NatasScreenshots/19.5.png)
+
