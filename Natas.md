@@ -468,3 +468,28 @@ print(f"Final password: {password}")
 ```
 
 ![alt text](NatasScreenshots/18.png)
+
+# Level 19
+Based on the source code, for the password to be revealed, we need for the value of **"admin"** in **$_SESSION** variable to be 1. The function **isValidAdminLogin()** would normally sets it to 1 if we log in with the username **admin**. But the part responsible for that is commented out so no matter what username we use, **"admin"** will always be set to 0.
+
+**$_SESSION** is a superglobal array that stores data that needs to be persistent across pages. These data are saved on server which will provide ID to the client to keep track of the session's data. That ID is called **PHPSESSID** and we can find it in the cookies.
+
+Normally, there was a time where a legit admin connected to the web and has his own legit session with his own ID. What we can do is guessing his ID and hijacking his session by changing the PHPSESSID cookie.
+
+Based in the source code, it randomizes our ID between 1 and 640 so the admin ID must be in that interval. Let's bruteforce the value of PHPSESSID from 1 to 640 using Burp Suite : 
+- Go to proxy and open the browser. Open the web and enter the credentials for **natas18**. 
+- Enable interception and enter any random username and password then press forward.
+
+![alt text](NatasScreenshots/19.1.png)
+
+- If you check the Request code on line 14, you'll see the cookie parameter which hold the PHPSESSID with the value of 361. Let's send the request to intruder to bruteforce that value (right-click on the request panel and click send to intruder).
+
+![alt text](NatasScreenshots/19.2.png)
+
+- Go to the Intruder tab. Select the value to be changed. Click **"add §"**. Set payload type to **numbers**. Set the range from 1 to 640. 
+
+![alt text](NatasScreenshots/19.2.png)
+
+- Go to settings on the right vertical pannel. Scroll down to **Auto-pause attack**. Add the item **"You are an admin."** so it will stop when it finds in without checking for other numbers.
+
+- Hit **Start Attack** and wait for the magic.
