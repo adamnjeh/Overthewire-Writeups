@@ -486,7 +486,7 @@ Based in the source code, it randomizes our ID between 1 and 640 so the admin ID
 
 ![alt text](NatasScreenshots/19.2.png)
 
-- Go to the Intruder tab. Select the value to be changed. Click **"add §"**. Set payload type to **numbers**. Set the range from 1 to 640. 
+- Go to the Intruder section. Select the value to be changed. Click **"add §"**. Set payload type to **numbers**. Set the range from 1 to 640. 
 
 ![alt text](NatasScreenshots/19.3.png)
 
@@ -501,4 +501,43 @@ Based in the source code, it randomizes our ID between 1 and 640 so the admin ID
 ![alt text](NatasScreenshots/19.5.png)
 
 # Level 20
+
+This time, it says that the ID is no longer sequential. And if we log in with arbitrary credentials (mine were **admin** for username and **test** for password), we see that the ID value a string of 18 character from a-z and 0-9. In my case, it **"3332322d61646d696e"**.
+
+Considering the character set it is using, it gave the vibe of being hex coded. So after decoding it, I found that it is translated from **"322-admin"**. Interesting.
+
+My guess that with the right number in range from 1 to 640 and appending to it **"-admin"**, we will get the admin's session. But in ASCII hex version.
+
+the **"-admin"** part is **2d61646d696e** in hex. And we need to prefix it with numbers from 1 to 640 in hex. Numbers are converted digit by digit and each digit is added 30 to it. So 0 is 30 in hex, 1 is 31, 9 is 39, 10 is 3130, 11 is 3131, 19 is 3139. We can write a python script that converts numbers to hex and add the the **"-admin"** suffix to them.
+
+```python
+for nb in range (1, 641):
+        result = ""
+        st = str(nb)
+        for char in st:
+                result += "3" + char
+        result +=  "2d61646d696e"
+        print(result)
+```
+
+After writing this code, we can output its result to file to be used as a payload list
+
+```console
+$ python3 list.py > payload.txt
+```
+
+Now we take this payload list to Burp Suite. After following the steps in the previous level, we choose **simple text** as payload type and load our generated list.
+
+![alt text](NatasScreenshots/20.1.png)
+
+It stopped on attempt 281 with the payload **3238312d61646d696e**
+
+
+![alt text](NatasScreenshots/20.2.png)
+
+Let's plug it in **SPHPSESSID** cookie and get in!
+
+![alt text](NatasScreenshots/20.3.png)
+
+
 
