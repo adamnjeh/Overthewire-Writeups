@@ -598,3 +598,23 @@ After connecting to the web, let's enable interception, input whatever we want, 
 Now we can turn of the interception and run another request. And voilà !
 
 ![alt text](NatasScreenshots/21.3.png)
+
+# Level 22
+
+Okay this level gave me real hard time and I'll explain why by the end of the solution.
+
+So this level gives us a link to another website and it tells us that they are colocated which means they are both hosted on the same server and there is a chance they may share the same **$_SESSION** variable. Let's assume they does.
+
+The first website that can provide us the password use the same technique before : it checks if there is a key in **$_SESSION** named **"admin"** and mapped with the value 1. But we here we have no way to change it.
+
+As for the second website, its job is changing some CSS formatting and it uses **$_SESSION** for that by mapping key-value with tag-value. And it sets the values to the inputs we provide. Later, it check if there is a **Submit** request and if there is, it sets all the requests' keys and values to the **$_SESSION**'s keys and value. So what we can do is injecting an input to make another key-value and it will be processed as a request. We can use **Burp Suite** for efficient work.
+
+Let's connect to the website with **Burp Suite** and enable interception. Click update and in the request scroll down where you'll see all the requests and simply add **"&admin=1"** around the **Submit** request.
+
+![alt text](NatasScreenshots/22.1.png)
+
+Press forward. Now let's take the provided **PHPSESSID** cookie as it reffers to the **$_SESSION** we have just manipulated and let's put it in the first website cookie and hit refresh.
+
+Now let's comeback to the part where it gave me a real pain in my you know what. Theorically, it would work normally and we'll see credentials. But no matter how I debug and try, it gave nothing. After spending the whole evening experimenting, I got to the conclusion that there is a timeout before the **$_SESSION** gets resetted or the link between the two websites expires or I don't know what exactly. But what I know for sure that it is a matter of timing. So changing the level's cookie and refreshing a bit late will revert our attempt. To solve this, you need to be really quick : Get the new cookie from a first attempt, change the cookie of the level and leave it like that, redo the interception and request changing, then quickly come back to the level website and hit refresh.
+
+![alt text](NatasScreenshots/22.2.png)
