@@ -539,5 +539,62 @@ Let's plug it in **SPHPSESSID** cookie and get in!
 
 ![alt text](NatasScreenshots/20.3.png)
 
+# Level 21
 
+As previously, we need to have a key named **admin** in the **$_SESSION** variable with a value of 1. But this time, the code is running differently. Let's understand the source code.
 
+After starting the session, the **session_set_save_handler()** will take care of the workflow of the code. First, it will execute the **myopen()**, which is empty, followed by **myread()**. The my **myread()** will open a file named after our session and reads its content line by line and for each line, it splits it per space and takes the first two strings where the first will be the key in the **$_SESSION** and the second will be the value. For exapmle, if the file has :
+```
+Bob 123
+Alice 456
+```
+The final treatment to the **$_SESSION** will be :
+
+```php
+$_SESSION['Bob'] = 123;
+$_SESSION['Alice'] = 456;
+```
+
+Then, it will execute the rest of code which is basically reading our input and putting it as a value to the key **"name""** in **$èSESSION** and exectuting the **print_credentials()** function.
+
+Finally, it executes the **mywrite()** functions which will empty the file and fill it from start with the content of **$_SESSION**.
+
+Now let's get to the exploitation part. The code sets **"name"** value in **$_SESSION** without sanitization from our input which will be written in the session file later. What we can do is forcing it to write a new line containing **"admin 1"**. That new line will later be appended as new key-value session.
+
+Let's clarify the process :
+
+- our input will be **"blabla\nadmin 1"**. We put **"\n"** to force it to write a new line.
+- **myread()** will be exucted and read the content of the session file which doesn't exist as the first time connecting.
+- Then **$_SESSION** will sets the value of **"name"** to our input so it will be :
+```php
+$_SESSION['name'] = blabla\nadmin 1
+```
+- The **print_credentials()** will be executed and since there is no **"admin"** key with value 1 yet, nothing special will happen.
+- Finally, **mywrite()** will read the what **$_SESSION** holds in a form of key-value pair, add a space between them and **"\n** at the end of each pair and put the result in the session file. So the session file will have :
+```
+name blabla
+admin 1
+```
+
+For now, we have no useful output. But if we do another request, the **myread()** function will run differently as now we have a session file with useful content. It will split it line by line, and for each line it will split it by space and take the first part as **$_SESSION** key and the second part as its value. So the **$_SESSION** now will look like this :
+
+```php
+$_SESSION['name'] = blabla;
+$_SESSION['admin'] = 1;
+```
+
+And thus, the **print_credentials()** will output what we want.
+
+The issue we rae left of is injecting the **"\n"** character in our input because the browser will not read it as the special new line character. What we can do is recurring to Burp Suite, intercepting the request and changing the request to what we desire. But don't forget to URL-Encode the input !
+
+![alt text](NatasScreenshots/21.1.png)
+
+So the url encoded version of our input is **"blabla%0Aadmin%201"**.
+
+![alt text](NatasScreenshots/21.2.png)
+
+After connecting to the web, let's enable interception, input whatever we want, proceeding the request, changing the "**name"** variable with our payload and hitting forward.
+
+Now we can turn of the interception and run another request. And voilà !
+
+![alt text](NatasScreenshots/21.3.png)
