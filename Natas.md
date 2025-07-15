@@ -641,7 +641,7 @@ The **strstr()** extracts from the first parameter the text strating from the fi
 ```php
 strstr("Hello World!", "Wrold");
 ```
-will output **"World!"**
+will output **"World!"**.
 
 To meet that condition, we just need for our password to contain **"iloveyou"** in it.
 
