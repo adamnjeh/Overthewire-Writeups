@@ -658,3 +658,42 @@ Here, it checks for password using **strcmp()** function which compares our inpu
 ![alt text](NatasScreenshots/25.png)
 
 Worked like a charm!
+
+# Level 26
+
+According to the source code, we are limited by the **safeinclude()** function. But there is it using an unusual log filing algorithm and anything unusual is a road to an exploitation. So our key orbits around that file it uses to save logs.
+
+First of all, it names it based on our **PHPSESSID** and storing it in the path **"/var/www/natas/natas25/logs"**. We need a way to get to that file.
+
+The **safeinclude()** function is not that strong because it uses **str_replace()** to guard from file directory traversal and that function does not do recursive checks. For example, if we want an output that has no **"bla"** in it, we would write
+```php
+str_replace("bla", "", $input);
+```
+but if the input holds the value **"blblaa123"**, it will be treated like
+```php
+str_replace("bla", "", "blblaa123");
+```
+and will process the replacement only once so it will output the string **"bla123"** which is not intended.
+
+Based on this, we can force **"../"** by writing **"....//"**.
+
+The code is accessing **"/language"** folder so the **"logs"** is most likely sits next it so one step back would do the job.
+
+To test it, let's inject in the get request **"?lang=....//logs/natas25_3btpuv1hv6ts4j8emgrv1q4egr.log"**. I used my session id so please replace it with yours which can be found in cookie data.
+
+![alt text](NatasScreenshots/26.1.png)
+
+So we have a way to access that file, Super! But how can we take advantage of this ? Well, checking the **logRequest()** function, the one thing that we have full control over is the **$_SERVER['HTTP_USER_AGENT']**. It reads our **User-Agent** and append it directly to the file without sanitization. We can easily change the value of **User-Agent** with **Burp Suite** and modify it in the request. With this power in our hand, we can change **User-Agent** to a php code that will be executed whenever we open the content of the log file. Let's try by changing the value **User-Agent** in the request with a simple echo command :
+```php
+<?php echo "********blabla********"; ?>
+```
+![alt text](NatasScreenshots/26.2.png)
+
+Working perfectly fine!
+
+Now, let's get the password by reading the content of **etc/natas_webpass/natas26** and echoing it :
+```php
+<?php echo file_get_contents('/etc/natas_webpass/natas26'); ?>
+```
+![alt text](NatasScreenshots/26.3.png)
+Amazing!
