@@ -628,3 +628,25 @@ To bypass the redirection, we can use **Burp Suite**. Go to proxy and do the req
 In the first line right after the **GET** keyword, add **"?revelio=blabla"** after the backslash to set the required key whatever value you'd like. And just hit send. The repeater will bypass the redirection by default. You can see the response in **pretty format** to see the password or move to **raw format** to copy it from line 30.
 
 ![alt text](NatasScreenshots/23.png)
+
+# Level 24
+
+The required password needs to meet these two if statement conditions :
+
+```php
+if(strstr($_REQUEST["passwd"],"iloveyou") && ($_REQUEST["passwd"] > 10 ))
+```
+
+The **strstr()** extracts from the first parameter the text strating from the first occurance of the second parameter to the end of the first's text. So 
+```php
+strstr("Hello World!", "Wrold");
+```
+will output **"World!"**
+
+To meet that condition, we just need for our password to contain **"iloveyou"** in it.
+
+For the second condition, it compares our password with the number 10. The issue is when it comes to comparing strings with numbers, php normally treats texts as the value 0. But when the text starts with number, it treats it as that number. So we need to start our password with a number strictly greater than 10.
+
+So submittinhg **"11iloveyou** will do the job.
+
+![alt text](NatasScreenshots/24.png)
