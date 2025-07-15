@@ -618,3 +618,13 @@ Press forward. Now let's take the provided **PHPSESSID** cookie as it reffers to
 Now let's comeback to the part where it gave me a real pain in my you know what. Theorically, it would work normally and we'll see credentials. But no matter how I debug and try, it gave nothing. After spending the whole evening experimenting, I got to the conclusion that there is a timeout before the **$_SESSION** gets resetted or the link between the two websites expires or I don't know what exactly. But what I know for sure that it is a matter of timing. So changing the level's cookie and refreshing a bit late will revert our attempt. To solve this, you need to be really quick : Get the new cookie from a first attempt, change the cookie of the level and leave it like that, redo the interception and request changing, then quickly come back to the level website and hit refresh.
 
 ![alt text](NatasScreenshots/22.2.png)
+
+# Level 23
+
+This level requires a key named **"revelio"** in **$_GET** variable which can be easily injected in the request URL. But it first checks the existance of **"admin"** in **$_SESSION** with the value 1. If there is no such thing, it will redirect us to the root path. Then, the code proceed and shows us the credentials if the **"revelio"** thing exists.
+
+To bypass the redirection, we can use **Burp Suite**. Go to proxy and do the request normally, then send it to repeater where the magic happens. 
+
+In the first line right after the **GET** keyword, add **"?revelio=blabla"** after the backslash to set the required key whatever value you'd like. And just hit send. The repeater will bypass the redirection by default. You can see the response in **pretty format** to see the password or move to **raw format** to copy it from line 30.
+
+![alt text](NatasScreenshots/23.png)
