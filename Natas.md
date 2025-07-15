@@ -650,3 +650,11 @@ For the second condition, it compares our password with the number 10. The issue
 So submittinhg **"11iloveyou** will do the job.
 
 ![alt text](NatasScreenshots/24.png)
+
+# Level 25
+
+Here, it checks for password using **strcmp()** function which compares our inputted string with a hidden string that we have no access to. After some research, I found out that older versions of php have vulnerability in their **strcmp()** function. Since it is expecting strings as parameters, passing arrays to it will result unexpected behaviour. So let's try casting **passwd** from a string to an array by adding **"[]"** in the url
+
+![alt text](NatasScreenshots/25.png)
+
+Worked like a charm!
