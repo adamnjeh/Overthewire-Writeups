@@ -779,3 +779,41 @@ echo $encoded;
 ![alt text](NatasScreenshots/27.3.png)
 
 Perfect!
+
+# Level 28
+
+The logic in this level is simple. We type a username and a password. If the username does not exist, it creates it mapped with the password provided. If it does, it checks if the provided password matches the one saved from its creation. If it does, it welcomes you and give you the credentials for that username. If not, it says wrong password for that user.
+
+If we put **natas28** as username and some random password, it will say that the password is wrong which means the account already exists and it holds the password we're looking for and logging in to it will reveal the password.
+
+![alt text](NatasScreenshots/28.1.png)
+
+The vulnerable side of this logic is that it uses 3 differents querries for each step : Checking user existance, checking user and password correctness and showing user's data.  And for showing data, it only takes the username as parameter without giving attention to password with it.
+
+So if 2 users shares the same username, there will be confusion in data dumping and the first instance will always be outputted no matter which user asked for it. But if we try to register with a username that already exists, it will interpret it as an attempt to login and will give error of password not matching. So how can we force it to create another account with the username **natas28** ?
+
+First, it takes our input as it is, sanitize it and checks its existace in the data base. If does not, it go to the creation phase.
+When creating a new user, it checks for spaces on both edges of our input using **trim()** function so we can't simply add spaces before or after our username and hoping to confuse the database. Then, it just takes the first 64 characters so it can fit in the database. Then it proceed to the sanitazation and registration. So if we give it a username that starts with **natas28** and followed by empty characters to form 64 character in total and follow it with ani random string, it will first read it as a new user and when it registers it, it will only take the first 64 character and since it ends with empty characters, it will remove them and leave only the **natas28** part. The empty character we're going to use is the **null character** symbolized by **"%00"** in url encoding.
+
+We can make the 64 character string with a simple python command :
+
+```console
+$ python3
+>>> print('natas28'+'%00'*(64-len('natas28')))
+```
+
+![alt text](NatasScreenshots/28.2.png)
+
+Now let's hope to **Burp Suite** and intercept the login to change the username with the **null characters** one and add to it some random string so it will read it as a new user.
+
+![alt text](NatasScreenshots/28.3.png)
+
+If we hit forward, it will say the new user registred is **natas28test** and not **natas28**. But don't worry, it's just showing what we inputted after **htmlentities()** processed it and not what it is actuallt registred in  the database.
+
+![alt text](NatasScreenshots/28.4.png)
+
+So if our approach is right, if we log in now with the username **natas28** and the password **test**, it will go on with success and retrieve the data of **natas28** which correspond to the first instance of its crearion.
+
+![alt text](NatasScreenshots/28.5.png)
+
+If it didn't work out, then probably the dabatbase reached its 5 minutes and got resetted. So repeat the process and create that user again. 
