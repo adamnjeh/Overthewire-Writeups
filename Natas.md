@@ -821,3 +821,46 @@ If it didn't work out, then probably the dabatbase reached its 5 minutes and got
 # Level 29
 
 So far, this is the hardest level I have encountered. It took me several days to solve it and I even got some help along the way. And honestly, I can't really explain the solution via text. Here is an awsome clean solving from John Hammond **"https://www.youtube.com/watch?v=qpC2sNcRj5o"** and if you didn't understand the approach he made, here is a clearer video **"https://www.youtube.com/watch?v=tEbq-SkNgY0"**.
+
+# Level 30
+
+This level is reading file name from the options and passing it in url as a get request to read its content. Obviously, a **cat** command is running on the back so let's try to inject some commands.
+
+By the way, since it is working with **index.pl** file, putting its name the get request would print out its content but weirdly it did not. So let's proceed anyway.
+
+After some experimenting, I found out that it won't work only if we added **null character** at the end which is **"%00"** in url encoding.
+
+let's inject this payload:
+```
+http://natas29.natas.labs.overthewire.org/index.pl?file=|ls%00
+```
+
+![alt text](NatasScreenshots/30.1.png)
+
+it printed out the files available in the options (plus a .txt at the end) and the **index.pl** file. Now it is clear why opening **index.pl** didn't work. It seems that it adds a prefix **".txt** to the file name we request. Anyway, we caan bypass the **cat** command the server is using and cat the **index.pl** ourselves.
+
+```
+http://natas29.natas.labs.overthewire.org/index.pl?file=|cat+index.pl%00
+```
+
+![alt text](NatasScreenshots/30.2.png)
+
+It printed out its content. If you pay attention to the part I highlited, it check if our request contains the keyword **"natas"**. If it does, it gets interrupted with a message **"meeeeeep!**. So we can't directly craft a request with **"cat /etc/natas_webpass/natas30"**.
+
+What we can do, is taking advantage of the concatinating the command **echo** does. For example :
+```console
+echo "Hel""lo!"
+```
+will output :
+```
+Hello!
+```
+
+So let's put an **echo** command in a **$()** notation and feed it to **cat** command like this :
+
+```console
+cat $(echo "/etc/nat""as_webpass/nat""as30")
+```
+to make sure it doesn't detect the keyword **natas**. Let's url encode it and request it
+
+![alt text](NatasScreenshots/30.3.png)
