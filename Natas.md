@@ -817,3 +817,7 @@ So if our approach is right, if we log in now with the username **natas28** and 
 ![alt text](NatasScreenshots/28.5.png)
 
 If it didn't work out, then probably the dabatbase reached its 5 minutes and got resetted. So repeat the process and create that user again. 
+
+# Level 29
+
+So far, this is the hardest level I have encountered. It took me several days to solve it and I even got some help along the way. And honestly, I can't really explain the solution via text. Here is an awsome clean solving from John Hammond **"https://www.youtube.com/watch?v=qpC2sNcRj5o"** and if you didn't understand the approach he made, here is a clearer video **"https://www.youtube.com/watch?v=tEbq-SkNgY0"**.
