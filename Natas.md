@@ -864,3 +864,15 @@ cat $(echo "/etc/nat""as_webpass/nat""as30")
 to make sure it doesn't detect the keyword **natas**. Let's url encode it and request it
 
 ![alt text](NatasScreenshots/30.3.png)
+
+# Level 31
+
+This code is made with perl. After reading the source code, I found out that it is using **quote()** function to do the sanitizing. After some research, I found out that it can a second parameter to define the **Data Type**. For example, **SQL_VARCHAR** is used to sanitize strings in general, **SQL_INTEGER** when the expected input is number, **SQL_DATE** when we are dealing with dates, etc... The second parameter is rarely used and its default value is **SQL_VARCHAR** for general usage. What we can do is override the function and set its second parameter to **SQL_INTEGER** so it will only sanitize numbers and don't touch our injection payload. Since it is passing **param('password')** as parameter to the **quote()** function expecting it to be a scalar, let's make it an array of 2 elements where the first is our payload 
+```
+'' or 1=1
+```
+and the second which is theorically **SQL_INTEGER** but it won't actually work because it needs to import **DBI qw(:sql_types)**. Instead, we will use the constant definer of **SQL_INTEGER** which is the number **4**.
+
+Now to make the **password** parameter, we can simply pass it twice in the request where the first instance will hold the payload and the second will hold the data type which is 4. Let's hope to **Burp Suite** and attempt a login with the username **natas31** and the password filled with the payload. Intercept and modify the request.
+
+![alt text](NatasScreenshots/31.png)
