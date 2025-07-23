@@ -876,3 +876,48 @@ and the second which is theorically **SQL_INTEGER** but it won't actually work b
 Now to make the **password** parameter, we can simply pass it twice in the request where the first instance will hold the payload and the second will hold the data type which is 4. Let's hope to **Burp Suite** and attempt a login with the username **natas31** and the password filled with the payload. Intercept and modify the request.
 
 ![alt text](NatasScreenshots/31.png)
+
+# Level 32
+
+This one converts csv files to HTML tables. It prevents inejction through **escapeHTML()** but I noticed it doesn't check the uploaded file correctly and trust the client to upload a legit csv file. After looking more into the **upload()** function of **GCI** module, I found a vulnerability related to it discussed by **blackhat** and here is a link for the presentation they used :
+
+https://www.blackhat.com/docs/asia-16/materials/asia-16-Rubin-The-Perl-Jam-2-The-Camel-Strikes-Back.pdf
+
+Our exact situation is discussed from slide 24 and it did is escalating to command execution. We can settle with just opening files as we only need to read the content of **/etc/natas_webpass/natas32**.
+
+Here is a recap for the exploitation : 
+
+We can apload multiple files by repeatedly submitting each file to the parameter **"file"**. All of them will be sorted in an array and fed to the **upload()** function.
+
+Not all of them needs to be a legit file as the **upload()** requires only one legit file among that array. Further more, it will only accept the first elemnt to do its following treatments on it. So we can provide our payload as the first file and another correct file as the second. This way, we will bypass the first if statement and have our payload to do its job.
+
+Now what payload do we need to inject ? Since the first elemnt won't be a legit file and just a simple string, the code line 
+```perl
+while (<file>) {}
+```
+will not work because it is not intended for strings. That's true until our string is actually **"ARGV"**.
+
+This way, it will insert the ARG values to **open()** call. In other words, for each element in **ARGV**, it will open it and output its content. 
+
+To feed a path of a file in **ARGV**, we can just append it to the request after a **"?"**.
+
+Let's hop to **Burp Suite** and do it.
+
+![alt text](NatasScreenshots/32.1.png)
+
+As you can see, I duplicated the text related to the **'file'** parameter and edited the first one to make its content a simple **ARGV** call.
+
+If we want to proceed to command execution like **blackhat** stated, we can simply add **" | "** to the **ARGV** element. This way, it will be upgraded from **open()** function to **exec()** function !
+
+Let's try it by adding a request now in the request. The command we will try is :
+```console
+cat /etc/natas_webpass/natas32 |
+```
+and after URL encoding it will be :
+```
+cat%20/etc/natas_webpass/natas32%20%7C
+```
+
+![alt text](NatasScreenshots/32.2.png)
+
+Worked like a charm !
