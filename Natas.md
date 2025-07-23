@@ -921,3 +921,45 @@ cat%20/etc/natas_webpass/natas32%20%7C
 ![alt text](NatasScreenshots/32.2.png)
 
 Worked like a charm !
+
+# Level 33
+
+We are dealing with the same perl script here but it's saying that we need to execute something in the webroot. When we try to follow the same approach we did earlier, nothing is revealed. And if we try to get the password for the previous level by opening **/etc/natas_webpass/natas32**, it works. So maybe it's a matter of file reading restrictions. Anyway, let's see the files in the webroot by executing **ls** command followed with **" | "**.
+
+I tried the url encoded version of 
+```console
+ls |
+```
+and
+```console
+ls|
+```
+but with weirdly with no result.
+What worked is 
+```console
+ls . |
+```
+which is converted to
+```
+ls%20.%20%7C
+```
+
+![alt text](NatasScreenshots/33.1.png)
+
+Obviously our lead is that file called **"getpassword"**
+
+We can run **file** command on it to find out that is executable
+
+![alt text](NatasScreenshots/33.2.png)
+
+Let's run it with the url encoded version of 
+```console
+./getpassword |
+```
+which is 
+```
+./getpassword%20%7C
+```
+to get the password
+
+![alt text](NatasScreenshots/33.3.png)
